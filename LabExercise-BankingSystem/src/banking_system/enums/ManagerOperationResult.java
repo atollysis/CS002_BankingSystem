@@ -1,0 +1,14 @@
+package banking_system.enums;
+
+public enum ManagerOperationResult {
+	SUCCESS,
+	
+	INVALID_ACCOUNT_NONEXISTENT,
+	INVALID_ACCOUNT_EXISTS,
+	INVALID_ACCOUNT_FORMAT,
+	
+	INVALID_PIN_WRONG,
+	INVALID_PIN_FORMAT,
+	
+	IO_PROBLEM;
+}
