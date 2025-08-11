@@ -16,11 +16,7 @@ public class Transaction {
 	 */
 	private final int id;
 	private final LocalDateTime timestamp;
-	private final TransactionType transactionType;
-	private final String accountID;
-	private final double amount;
-	private final String recipientID;
-	private final AccountOperationResult status;
+	private final SessionDetails details;
 	
 	/*
 	 * CONSTRUCTOR
@@ -28,31 +24,10 @@ public class Transaction {
 	public Transaction(
 			int id,
 			LocalDateTime timestamp,
-			TransactionType transactionType,
-			String accountID,
-			double amount,
-			String recipientID,
-			AccountOperationResult status) {
-		this.id = id;
-		this.timestamp = timestamp;
-		this.transactionType = transactionType;
-		this.accountID = accountID;
-		this.amount = amount;
-		this.recipientID = recipientID;
-		this.status = status;
-	}
-	
-	public Transaction(
-			int id,
-			LocalDateTime timestamp,
 			SessionDetails details) {
 		this.id = id;
 		this.timestamp = timestamp;
-		this.transactionType = details.getTransactionType();
-		this.accountID = details.getAccountID();
-		this.amount = details.getAmount();
-		this.recipientID = details.getRecipientID();
-		this.status = details.getStatus();
+		this.details = details;
 	}
 	
 	/*
@@ -67,12 +42,11 @@ public class Transaction {
 				"%d,%s,%s,%s,%.2f,%s,%s\n",
 				this.id,
 				this.timestamp.toString(),
-				this.accountID,
-				this.transactionType.toString(),
-				this.accountID,
-				this.amount,
-				this.recipientID,
-				this.status.toString());
+				this.details.getTransactionType().toString(),
+				this.details.getAccountID(),
+				this.details.getAmount(),
+				this.details.getRecipientID(),
+				this.details.getStatus().toString());
 	}
 	
 	/*

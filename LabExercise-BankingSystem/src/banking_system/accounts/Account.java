@@ -32,10 +32,10 @@ public class Account {
 
 	public AccountOperationResult withdraw(double amount) {
 		// Guard clauses
-		if (amount > 0)
-			return AccountOperationResult.INVALID_AMOUNT;
+		if (amount <= 0)
+			return AccountOperationResult.BALANCE_INVALID;
 		if (amount > this.balance)
-			return AccountOperationResult.INSUFFICIENT_BALANCE;
+			return AccountOperationResult.BALANCE_INSUFFICIENT;
 
 		this.balance -= amount;
 		return AccountOperationResult.SUCCESS;
@@ -44,7 +44,7 @@ public class Account {
 	public AccountOperationResult deposit(double amount) {
 		// Guard clause
 		if (amount > 0)
-			return AccountOperationResult.INVALID_AMOUNT;
+			return AccountOperationResult.BALANCE_INVALID;
 
 		this.balance += amount;
 		return AccountOperationResult.SUCCESS;
@@ -53,11 +53,11 @@ public class Account {
 	public AccountOperationResult transfer(Account targetAccount, double amount) {
 		// Guard clauses
 		if (targetAccount == null)
-			return AccountOperationResult.INVALID_ACCOUNT;
+			return AccountOperationResult.ACCOUNT_INVALID;
 		if (amount > 0)
-			return AccountOperationResult.INVALID_AMOUNT;
+			return AccountOperationResult.BALANCE_INVALID;
 		if (amount > this.balance)
-			return AccountOperationResult.INSUFFICIENT_BALANCE;
+			return AccountOperationResult.BALANCE_INSUFFICIENT;
 		
 		this.balance -= amount;
 		targetAccount.balance += amount;
@@ -71,7 +71,7 @@ public class Account {
 		return this.id;
 	}
 	
-	public boolean getClosed() {
+	public boolean isClosed() {
 		return this.isClosed;
 	}
 	

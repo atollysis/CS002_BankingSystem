@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import banking_system.parsers.CSVParser;
+import banking_system.transactions.TransactionType;
 
 public class AccountManager {
 	/*
@@ -23,7 +24,6 @@ public class AccountManager {
 	/*
 	 * SUPPORT METHODS
 	 */
-	
 	private static Account findAccount(String accountNumber) {
 		if (AccountManager.accounts == null)
 			throw new IllegalStateException("Account list has not been initialized.");
@@ -62,6 +62,11 @@ public class AccountManager {
 		return true;
 	}
 	
+	private void checkLoggedIn() {
+		if (this.currentAccount == null)
+			throw new IllegalStateException("Currently not logged in to any account.");
+	}
+	
 	/*
 	 * SERVICE METHODS
 	 */
@@ -87,13 +92,23 @@ public class AccountManager {
 		return ManagerOperationResult.SUCCESS;
 	}
 	
-	public void deleteAccount() {
-		//
+	public void deleteAccount(TransactionType balanceOperation, String accountNumber) {
+		this.checkLoggedIn();
+		
+		if (this.currentAccount.getBalance() > 0) {
+			if (balanceOperation == TransactionType.TRANSFER) {
+				this.currentAccount.transfer(
+						AccountManager.findAccount(accountNumber),
+						this.currentAccount.getBalance());
+			}
+			else if (balanceOperation == TransactionType.WITHDRAW)
+				this.currentAccount.withdraw(this.currentAccount.getBalance());
+		}
+		this.currentAccount.setClosed(true);
 	}
 	
 	public ManagerOperationResult modifyAccountPin(String oldPin, String newPin) {
-		if (this.currentAccount == null)
-			throw new IllegalStateException("Currently not logged in to any account.");
+		this.checkLoggedIn();
 		
 		if (!this.currentAccount.verify(oldPin))
 			return ManagerOperationResult.INVALID_PIN_FORMAT;
@@ -106,6 +121,8 @@ public class AccountManager {
 		Account account = AccountManager.findAccount(accountNumber);
 		if (account == null)
 			return ManagerOperationResult.INVALID_ACCOUNT_NONEXISTENT;
+		if (account.isClosed())
+			return ManagerOperationResult.INVALID_ACCOUNT_CLOSED;
 		if (!account.verify(pin))
 			return ManagerOperationResult.INVALID_PIN_WRONG;
 		

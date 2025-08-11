@@ -2,9 +2,10 @@ package banking_system.accounts;
 
 public enum AccountOperationResult {
 	SUCCESS,
-	INVALID_ACCOUNT,
-	INVALID_AMOUNT,
-	INSUFFICIENT_BALANCE;
+	ACCOUNT_INVALID,		// recipient account doesn't exist
+	
+	BALANCE_INVALID,		// <= 0
+	BALANCE_INSUFFICIENT;	// amount > balance
 	
 	@Override
 	public String toString() {
