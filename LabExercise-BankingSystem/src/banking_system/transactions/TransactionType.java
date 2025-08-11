@@ -4,6 +4,7 @@ public enum TransactionType {
 	DEPOSIT,
 	WITHDRAW,
 	TRANSFER,
+	CHANGE_PIN,
 	ACCOUNT_CREATION,
 	ACCOUNT_CLOSURE;
 	

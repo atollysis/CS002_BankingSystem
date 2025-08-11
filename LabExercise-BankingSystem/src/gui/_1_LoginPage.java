@@ -24,6 +24,7 @@ public class _1_LoginPage extends JPanel {
 	// Controllers
 	private final MainRunner runner;
 	private final AccountManager accountManager;
+	private final TransactionManager transactionManager;
 	
 	// Swing
 	private JLabel lbl_accNum;
@@ -39,9 +40,10 @@ public class _1_LoginPage extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public _1_LoginPage(MainRunner runner, AccountManager accountManager) {
+	public _1_LoginPage(MainRunner runner) {
 		this.runner = runner;
-		this.accountManager = accountManager;
+		this.accountManager = runner.getAccountManager();
+		this.transactionManager = runner.getTransactionManager();
 		
 		this.setupComponents();
 		this.setupLayout();
@@ -116,6 +118,9 @@ public class _1_LoginPage extends JPanel {
 			
 			switch (result) {
 				case ManagerOperationResult.SUCCESS:
+					String id = this.accountManager.getCurrAccount().getAccountNumber();
+					this.transactionManager.setAccountID(id);
+					this.runner.updateAccountPageDetails();
 					this.runner.goToPanel(PanelType.ACCOUNT);
 					break;
 					
@@ -152,6 +157,12 @@ public class _1_LoginPage extends JPanel {
 			
 			switch (result) {
 				case ManagerOperationResult.SUCCESS:
+					// Create account creation transaction and inform the user
+					String id = this.accountManager.getCurrAccount().getAccountNumber();
+					this.transactionManager.setAccountID(id);
+					this.transactionManager.setAccountCreationTransaction();
+					this.transactionManager.addNewTransaction();
+					this.accountManager.setCurrAccount(null);
 					this.lbl_error.setText("Account succesfully created!");
 					break;
 					

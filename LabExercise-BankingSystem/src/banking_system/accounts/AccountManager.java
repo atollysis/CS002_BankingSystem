@@ -89,6 +89,7 @@ public class AccountManager {
 				pin,
 				0.0);
 		AccountManager.accounts.add(newAccount);
+		this.currentAccount = newAccount;
 		CSVParser.updateAccounts(AccountManager.accounts);
 		return ManagerOperationResult.SUCCESS;
 	}
@@ -150,7 +151,7 @@ public class AccountManager {
 	/*
 	 * SETTERS
 	 */
-	public void setCurrAccout(Account currentAccount) {
+	public void setCurrAccount(Account currentAccount) {
 		this.currentAccount = currentAccount;
 	}
 }
