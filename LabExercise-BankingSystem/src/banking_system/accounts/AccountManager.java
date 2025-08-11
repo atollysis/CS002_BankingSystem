@@ -75,10 +75,10 @@ public class AccountManager {
 	}
 	
 	public ManagerOperationResult createAccount(String accountNumber, String pin) {
-		if (!AccountManager.isValidAccountNumber(accountNumber))
-			return ManagerOperationResult.INVALID_ACCOUNT_FORMAT;
 		if (AccountManager.accountNumberExists(accountNumber))
 			return ManagerOperationResult.INVALID_ACCOUNT_EXISTS;
+		if (!AccountManager.isValidAccountNumber(accountNumber))
+			return ManagerOperationResult.INVALID_ACCOUNT_FORMAT;
 		if (!AccountManager.isValidPin(pin))
 			return ManagerOperationResult.INVALID_PIN_FORMAT;
 		
@@ -89,6 +89,7 @@ public class AccountManager {
 				pin,
 				0.0);
 		AccountManager.accounts.add(newAccount);
+		CSVParser.updateAccounts(AccountManager.accounts);
 		return ManagerOperationResult.SUCCESS;
 	}
 	
@@ -118,6 +119,11 @@ public class AccountManager {
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {
+		if (!AccountManager.isValidAccountNumber(accountNumber))
+			return ManagerOperationResult.INVALID_ACCOUNT_FORMAT;
+		if (!AccountManager.isValidPin(pin))
+			return ManagerOperationResult.INVALID_PIN_FORMAT;
+		
 		Account account = AccountManager.findAccount(accountNumber);
 		if (account == null)
 			return ManagerOperationResult.INVALID_ACCOUNT_NONEXISTENT;

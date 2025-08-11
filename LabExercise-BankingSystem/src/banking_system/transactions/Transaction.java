@@ -24,6 +24,25 @@ public class Transaction {
 	public Transaction(
 			int id,
 			LocalDateTime timestamp,
+			TransactionType transactionType,
+			String accountID,
+			Double amount,
+			String recipientID,
+			AccountOperationResult status) {
+		this.id = id;
+		this.timestamp = timestamp;
+		
+		this.details = new SessionDetails();
+		this.details.setTransactionType(transactionType);
+		this.details.setAccountID(accountID);
+		this.details.setAmount(amount);
+		this.details.setRecipientID(recipientID);
+		this.details.setStatus(status);
+	}
+	
+	public Transaction(
+			int id,
+			LocalDateTime timestamp,
 			SessionDetails details) {
 		this.id = id;
 		this.timestamp = timestamp;

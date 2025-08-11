@@ -4,7 +4,8 @@ public enum TransactionType {
 	DEPOSIT,
 	WITHDRAW,
 	TRANSFER,
-	INVALID;
+	ACCOUNT_CREATION,
+	ACCOUNT_CLOSURE;
 	
 	/*
 	 * SERVICE METHODS

@@ -38,7 +38,7 @@ public class TransactionManager {
 		Transaction newTransaction = new Transaction(
 				transactions.size() + 1,	// ID
 				LocalDateTime.now(),		// Timestamp
-				details						// Transaction Type, IDs, Amount, Status
+				details						// Transaction Type, ID, Amount, ID, Status
 				);
 		transactions.add(newTransaction);
 	}
