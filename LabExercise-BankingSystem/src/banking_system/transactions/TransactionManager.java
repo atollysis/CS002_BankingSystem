@@ -71,7 +71,7 @@ public class TransactionManager {
 		this.details.setAccountID(id);
 	}
 	
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.details.setAmount(amount);
 	}
 	

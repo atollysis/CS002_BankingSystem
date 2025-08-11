@@ -43,7 +43,7 @@ public class Account {
 
 	public AccountOperationResult deposit(double amount) {
 		// Guard clause
-		if (amount > 0)
+		if (amount <= 0)
 			return AccountOperationResult.BALANCE_INVALID;
 
 		this.balance += amount;
@@ -54,7 +54,7 @@ public class Account {
 		// Guard clauses
 		if (targetAccount == null)
 			return AccountOperationResult.ACCOUNT_INVALID;
-		if (amount > 0)
+		if (amount <= 0)
 			return AccountOperationResult.BALANCE_INVALID;
 		if (amount > this.balance)
 			return AccountOperationResult.BALANCE_INSUFFICIENT;

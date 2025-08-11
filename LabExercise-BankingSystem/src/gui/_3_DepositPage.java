@@ -8,14 +8,15 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
+import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
-import banking_system.transactions.TransactionType;
 import runners.MainRunner;
 
-public class _2_AccountPage extends JPanel {
+public class _3_DepositPage extends JPanel {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -27,21 +28,19 @@ public class _2_AccountPage extends JPanel {
 	private final TransactionManager transactionManager;
 		
 	// Components
-	private JLabel lbl_welcome;
+	private JLabel lbl_title;
 	private JLabel lbl_accNum;
 	private JLabel lbl_balance;
 	
-	private JButton btn_changePin;
+	private JLabel lbl_error;
+	private JTextField fld_balance;
 	private JButton btn_deposit;
-	private JButton btn_withdraw;
-	private JButton btn_logout;
-	private JButton btn_transfer;
-	private JButton btn_delete;
-	
+	private JButton btn_back;
+
 	/**
 	 * Create the panel.
 	 */
-	public _2_AccountPage(MainRunner runner) {
+	public _3_DepositPage(MainRunner runner) {
 		this.runner = runner;
 		this.accountManager = runner.getAccountManager();
 		this.transactionManager = runner.getTransactionManager();
@@ -52,33 +51,29 @@ public class _2_AccountPage extends JPanel {
 	}
 	
 	private void setupComponents() {
-		this.lbl_welcome = new JLabel("Welcome!");
-		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
+		this.lbl_title = new JLabel("DEPOSIT");
+		lbl_title.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
 		this.lbl_balance = new JLabel("Php 0.00");
 		
+		this.lbl_error = new JLabel(" ");
+		this.fld_balance = new JTextField();
 		this.btn_deposit = new JButton("Deposit");
-		this.btn_withdraw = new JButton("Withdraw");
-		this.btn_transfer = new JButton("Transfer Balance");
-		this.btn_logout = new JButton("Log Out");
-		this.btn_changePin = new JButton("Change PIN");
-		this.btn_delete = new JButton("Close Account");
+		this.btn_back = new JButton("Back");
 	}
 	
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		
-		this.add(lbl_welcome, newLabelConstraint(0, 0, 0));
+		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
 		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
-		this.add(btn_deposit,  newButtonConstraint(0, 3));
-		this.add(btn_withdraw, newButtonConstraint(0, 4));
-		this.add(btn_transfer, newButtonConstraint(0, 5));
-		this.add(btn_logout,    newButtonConstraint(1, 3));
-		this.add(btn_changePin, newButtonConstraint(1, 4));
-		this.add(btn_delete,    newButtonConstraint(1, 5));
+		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
+		this.add(fld_balance, newFieldConstraint(0, 4));
+		this.add(btn_deposit, newButtonConstraint(0, 5));
+		this.add(btn_back,    newButtonConstraint(1, 5));
 	}
-	
+
 	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
@@ -86,6 +81,16 @@ public class _2_AccountPage extends JPanel {
 		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, bottomInset, 0);
+		return c;
+	}
+	
+	private static GridBagConstraints newFieldConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(5, 5, 5, 5);
 		return c;
 	}
 	
@@ -100,34 +105,38 @@ public class _2_AccountPage extends JPanel {
 	
 	private void setupInteractions() {
 		this.btn_deposit.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.DEPOSIT);
-			this.runner.goToPanel(PanelType.DEPOSIT);
+			double amount;
+			try {
+				amount = Double.parseDouble(this.fld_balance.getText());
+			} catch (NumberFormatException ex) {
+				amount = 0.0;
+			}
+			AccountOperationResult result = this.accountManager.getCurrAccount().deposit(amount);
+			this.transactionManager.setAmount(amount);
+			this.transactionManager.setRecipientID(null);
+			this.transactionManager.setStatus(result);
+			
+			switch (result) {
+				case SUCCESS:
+					this.transactionManager.addNewTransaction();
+					this.runner.updateAccountDetails();
+					this.runner.goToPanel(PanelType.ACCOUNT);
+					break;
+					
+				case BALANCE_INVALID:
+					this.transactionManager.addNewTransaction();
+					this.lbl_error.setText("Invalid balance.");
+					break;
+					
+				default:
+					// BALANCE_INSUFFICIENT
+					// ACCOUNT_INVALID
+			}
 		});
 		
-		this.btn_withdraw.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.WITHDRAW);
-			this.runner.goToPanel(PanelType.WITHDRAW);
-		});
-		
-		this.btn_transfer.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.TRANSFER);
-			this.runner.goToPanel(PanelType.TRANSFER);
-		});
-		
-		this.btn_logout.addActionListener(e -> {
-			this.accountManager.logout();
-			this.transactionManager.clearSessionDetails();
-			this.runner.goToPanel(PanelType.LOGIN);
-		});
-		
-		this.btn_changePin.addActionListener(e -> {
-			this.transactionManager.setPinChangeTransaction();
-			this.runner.goToPanel(PanelType.CHANGE_PIN);
-		});
-		
-		this.btn_delete.addActionListener(e -> {
-			this.transactionManager.setAccountClosureTransaction();
-			this.runner.goToPanel(PanelType.DELETE);
+		this.btn_back.addActionListener(e -> {
+			this.transactionManager.setTransactionType(null);
+			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}
 	

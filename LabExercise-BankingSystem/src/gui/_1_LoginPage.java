@@ -117,30 +117,30 @@ public class _1_LoginPage extends JPanel {
 					String.valueOf(this.fld_accPin.getPassword()));
 			
 			switch (result) {
-				case ManagerOperationResult.SUCCESS:
+				case SUCCESS:
 					String id = this.accountManager.getCurrAccount().getAccountNumber();
 					this.transactionManager.setAccountID(id);
-					this.runner.updateAccountPageDetails();
+					this.runner.updateAccountDetails();
 					this.runner.goToPanel(PanelType.ACCOUNT);
 					break;
 					
-				case ManagerOperationResult.INVALID_ACCOUNT_FORMAT:
+				case INVALID_ACCOUNT_FORMAT:
 					this.lbl_error.setText("Invalid account number.");
 					break;
 					
-				case ManagerOperationResult.INVALID_PIN_FORMAT:
+				case INVALID_PIN_FORMAT:
 					this.lbl_error.setText("Invalid pin.");
 					break;
 					
-				case ManagerOperationResult.INVALID_ACCOUNT_NONEXISTENT:
+				case INVALID_ACCOUNT_NONEXISTENT:
 					this.lbl_error.setText("Account does not exist.");
 					break;
 					
-				case ManagerOperationResult.INVALID_ACCOUNT_CLOSED:
+				case INVALID_ACCOUNT_CLOSED:
 					this.lbl_error.setText("Account is closed.");
 					break;
 					
-				case ManagerOperationResult.INVALID_PIN_WRONG:
+				case INVALID_PIN_WRONG:
 					this.lbl_error.setText("Invalid pin.");
 					break;
 					
@@ -156,7 +156,7 @@ public class _1_LoginPage extends JPanel {
 					String.valueOf(this.fld_accPin.getPassword()));
 			
 			switch (result) {
-				case ManagerOperationResult.SUCCESS:
+				case SUCCESS:
 					// Create account creation transaction and inform the user
 					String id = this.accountManager.getCurrAccount().getAccountNumber();
 					this.transactionManager.setAccountID(id);
@@ -166,15 +166,15 @@ public class _1_LoginPage extends JPanel {
 					this.lbl_error.setText("Account succesfully created!");
 					break;
 					
-				case ManagerOperationResult.INVALID_ACCOUNT_EXISTS:
+				case INVALID_ACCOUNT_EXISTS:
 					this.lbl_error.setText("Account number already taken.");
 					break;
 					
-				case ManagerOperationResult.INVALID_ACCOUNT_FORMAT:
+				case INVALID_ACCOUNT_FORMAT:
 					this.lbl_error.setText("Invalid account number.");
 					break;
 					
-				case ManagerOperationResult.INVALID_PIN_FORMAT:
+				case INVALID_PIN_FORMAT:
 					this.lbl_error.setText("Invalid pin. Must be all numbers.");
 					break;
 					
