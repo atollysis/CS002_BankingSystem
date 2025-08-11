@@ -1,22 +1,22 @@
-package banking_system;
+package banking_system.accounts;
 
 import java.util.List;
 import java.util.Set;
 
-import banking_system.enums.ManagerOperationResult;
+import banking_system.parsers.CSVParser;
 
 public class AccountManager {
 	/*
 	 * ATTRIBUTES
 	 */
-	private static Set<BankAccount> accounts;
-	private BankAccount currentAccount;
+	private static Set<Account> accounts;
+	private Account currentAccount;
 
 	/*
 	 * CONSTRUCTOR
 	 */
 	public AccountManager() {
-		AccountManager.accounts = CSVParser.loadFile();
+		AccountManager.accounts = CSVParser.loadAccounts();
 		this.currentAccount = null;
 	}
 
@@ -24,13 +24,13 @@ public class AccountManager {
 	 * SUPPORT METHODS
 	 */
 	
-	private static BankAccount findAccount(String accountNumber) {
+	private static Account findAccount(String accountNumber) {
 		if (AccountManager.accounts == null)
 			throw new IllegalStateException("Account list has not been initialized.");
 		if (AccountManager.accounts.isEmpty())
 			throw new IllegalStateException("Account list is empty.");
 		
-		List<BankAccount> result = AccountManager.accounts
+		List<Account> result = AccountManager.accounts
 				.stream()
 				.filter(acc -> acc.getAccountNumber().equals(accountNumber))
 				.toList();
@@ -77,7 +77,7 @@ public class AccountManager {
 		if (!AccountManager.isValidPin(pin))
 			return ManagerOperationResult.INVALID_PIN_FORMAT;
 		
-		BankAccount newAccount = new BankAccount(
+		Account newAccount = new Account(
 				AccountManager.accounts.size(),
 				false,
 				accountNumber,
@@ -103,7 +103,7 @@ public class AccountManager {
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {
-		BankAccount account = AccountManager.findAccount(accountNumber);
+		Account account = AccountManager.findAccount(accountNumber);
 		if (account == null)
 			return ManagerOperationResult.INVALID_ACCOUNT_NONEXISTENT;
 		if (!account.verify(pin))
@@ -120,14 +120,14 @@ public class AccountManager {
 	/*
 	 * GETTERS
 	 */
-	public BankAccount getCurrAccount() {
+	public Account getCurrAccount() {
 		return this.currentAccount;
 	}
 	
 	/*
 	 * SETTERS
 	 */
-	public void setCurrAccout(BankAccount currentAccount) {
+	public void setCurrAccout(Account currentAccount) {
 		this.currentAccount = currentAccount;
 	}
 }

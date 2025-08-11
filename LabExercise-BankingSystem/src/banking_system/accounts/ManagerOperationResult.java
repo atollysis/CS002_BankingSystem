@@ -1,4 +1,4 @@
-package banking_system.enums;
+package banking_system.accounts;
 
 public enum ManagerOperationResult {
 	SUCCESS,

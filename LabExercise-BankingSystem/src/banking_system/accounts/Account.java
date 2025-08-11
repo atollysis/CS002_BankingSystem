@@ -1,10 +1,8 @@
-package banking_system;
+package banking_system.accounts;
 
 import java.util.Objects;
 
-import banking_system.enums.AccountOperationResult;
-
-public class BankAccount implements Comparable<BankAccount> {
+public class Account {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -17,7 +15,7 @@ public class BankAccount implements Comparable<BankAccount> {
 	/*
 	 * CONSTRUCTOR
 	 */
-	public BankAccount(int id, boolean isClosed, String accountNumber, String pin, double balance) {
+	public Account(int id, boolean isClosed, String accountNumber, String pin, double balance) {
 		this.id = id;
 		this.isClosed = isClosed;
 		this.accountNumber = accountNumber;
@@ -52,7 +50,7 @@ public class BankAccount implements Comparable<BankAccount> {
 		return AccountOperationResult.SUCCESS;
 	}
 
-	public AccountOperationResult transfer(BankAccount targetAccount, double amount) {
+	public AccountOperationResult transfer(Account targetAccount, double amount) {
 		// Guard clauses
 		if (targetAccount == null)
 			return AccountOperationResult.INVALID_ACCOUNT;
@@ -69,6 +67,10 @@ public class BankAccount implements Comparable<BankAccount> {
 	/*
 	 * GETTERS
 	 */
+	public int getID() {
+		return this.id;
+	}
+	
 	public boolean getClosed() {
 		return this.isClosed;
 	}
@@ -112,7 +114,7 @@ public class BankAccount implements Comparable<BankAccount> {
 		if (this.getClass() != obj.getClass())
 			return false;
 
-		BankAccount other = (BankAccount) obj;
+		Account other = (Account) obj;
 
 		return this.accountNumber.equals(other.accountNumber);
 	}
@@ -120,10 +122,5 @@ public class BankAccount implements Comparable<BankAccount> {
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.accountNumber);
-	}
-
-	@Override
-	public int compareTo(BankAccount o) {
-		return Integer.compare(this.id, o.id);
 	}
 }
