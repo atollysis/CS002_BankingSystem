@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -32,6 +33,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 	private JLabel lbl_accNum;
 	private JLabel lbl_balance;
 	
+	private JLabel lbl_error;
 	private JButton btn_changePin;
 	private JButton btn_deposit;
 	private JButton btn_withdraw;
@@ -58,6 +60,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 		this.lbl_accNum = new JLabel("#1234");
 		this.lbl_balance = new JLabel("Php 0.00");
 		
+		this.lbl_error = new JLabel(" ");
 		this.btn_deposit = new JButton("Deposit");
 		this.btn_withdraw = new JButton("Withdraw");
 		this.btn_transfer = new JButton("Transfer Balance");
@@ -68,16 +71,18 @@ public class _2_AccountPage extends JPanel implements Settable {
 	
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
 		this.add(lbl_welcome, newLabelConstraint(0, 0, 0));
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
 		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
-		this.add(btn_deposit,  newButtonConstraint(0, 3));
-		this.add(btn_withdraw, newButtonConstraint(0, 4));
-		this.add(btn_transfer, newButtonConstraint(0, 5));
-		this.add(btn_logout,    newButtonConstraint(1, 3));
-		this.add(btn_changePin, newButtonConstraint(1, 4));
-		this.add(btn_delete,    newButtonConstraint(1, 5));
+		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
+		this.add(btn_deposit,  newButtonConstraint(0, 4));
+		this.add(btn_withdraw, newButtonConstraint(0, 5));
+		this.add(btn_transfer, newButtonConstraint(0, 6));
+		this.add(btn_logout,    newButtonConstraint(1, 4));
+		this.add(btn_changePin, newButtonConstraint(1, 5));
+		this.add(btn_delete,    newButtonConstraint(1, 6));
 	}
 	
 	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
@@ -94,6 +99,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 
@@ -127,6 +133,9 @@ public class _2_AccountPage extends JPanel implements Settable {
 		});
 		
 		this.btn_delete.addActionListener(e -> {
+			if (this.accountManager.getCurrAccount().hasBalance())
+				this.lbl_error.setText("You still have balance!");
+			
 			this.transactionManager.setAccountClosureTransaction();
 			this.runner.goToPanel(PanelType.DELETE);
 		});
@@ -139,5 +148,6 @@ public class _2_AccountPage extends JPanel implements Settable {
 	public void setDetails(Account account) {
 		this.lbl_accNum.setText("#" + account.getAccountNumber());
 		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
+		this.lbl_error.setText(" ");
 	}
 }

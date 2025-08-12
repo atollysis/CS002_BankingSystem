@@ -194,8 +194,9 @@ public class _1_LoginPage extends JPanel implements Clearable {
 	 * SERVICE METHODS
 	 */
 	@Override
-	public void clearTextFields() {
+	public void clearFieldsAndMsgs() {
 		this.fld_accNum.setText("");
 		this.fld_accPin.setText("");
+		this.lbl_error.setText(" ");
 	}
 }

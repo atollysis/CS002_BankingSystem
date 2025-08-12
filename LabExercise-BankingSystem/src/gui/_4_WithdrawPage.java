@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -66,6 +67,7 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 	
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
 		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
@@ -100,6 +102,7 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 
@@ -157,7 +160,8 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 	}
 	
 	@Override
-	public void clearTextFields() {
+	public void clearFieldsAndMsgs() {
 		this.fld_balance.setText("");
+		this.lbl_error.setText(" ");
 	}
 }

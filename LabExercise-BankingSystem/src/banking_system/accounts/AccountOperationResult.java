@@ -6,6 +6,7 @@ public enum AccountOperationResult {
 	
 	BALANCE_INVALID,		// <= 0
 	BALANCE_INSUFFICIENT,	// amount > balance
+	BALANCE_EXISTS,			// for deletion
 	
 	PIN_INVALID,
 	PIN_WRONG;

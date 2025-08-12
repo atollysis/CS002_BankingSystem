@@ -95,19 +95,10 @@ public class AccountManager {
 		return ManagerOperationResult.SUCCESS;
 	}
 	
-	public void deleteAccount(TransactionType balanceOperation, String accountNumber) {
-		this.checkLoggedIn();
-		
-		if (this.currentAccount.getBalance() > 0) {
-			if (balanceOperation == TransactionType.TRANSFER) {
-				this.currentAccount.transfer(
-						AccountManager.findAccount(accountNumber),
-						this.currentAccount.getBalance());
-			}
-			else if (balanceOperation == TransactionType.WITHDRAW)
-				this.currentAccount.withdraw(this.currentAccount.getBalance());
-		}
-		this.currentAccount.setClosed(true);
+	public ManagerOperationResult closeAccount() {
+		this.currentAccount.closeAccount();
+		CSVParser.updateAccounts(AccountManager.accounts);
+		return ManagerOperationResult.SUCCESS;
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {

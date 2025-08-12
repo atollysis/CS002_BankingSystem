@@ -29,6 +29,10 @@ public class Account {
 	public boolean verify(String pin) {
 		return this.pin.equals(pin);
 	}
+	
+	public boolean hasBalance() {
+		return this.balance < 0.01;
+	}
 
 	public AccountOperationResult withdraw(double amount) {
 		// Guard clauses
@@ -73,6 +77,14 @@ public class Account {
 			return AccountOperationResult.PIN_WRONG;
 		
 		this.pin = newPin;
+		return AccountOperationResult.SUCCESS;
+	}
+	
+	public AccountOperationResult closeAccount() {
+		if (this.hasBalance())
+			return AccountOperationResult.BALANCE_EXISTS;
+		
+		this.setClosed(true);
 		return AccountOperationResult.SUCCESS;
 	}
 	

@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -61,6 +62,7 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 		this.lbl_accNum = new JLabel("#1234");
 		this.lbl_balance = new JLabel("Php 0.00");
 		
+		
 		this.lbl_error = new JLabel(" ");
 		this.lbl_promptBalance = new JLabel("Amount");
 		this.lbl_promptRecipient = new JLabel("Account Number");
@@ -72,24 +74,40 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 	
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		
+		JPanel fieldWrapper = new JPanel();
+		fieldWrapper.setLayout(new GridBagLayout());
+		fieldWrapper.add(lbl_promptBalance,   newFieldLabelConstraint(0, 0));
+		fieldWrapper.add(fld_balance,              newFieldConstraint(1, 0));
+		fieldWrapper.add(lbl_promptRecipient,       newFieldLabelConstraint(0, 1));
+		fieldWrapper.add(fld_recipient,            newFieldConstraint(1, 1));
 		
 		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
 		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
 		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
-		this.add(lbl_promptBalance,   newFieldLabelConstraint(0, 4));
-		this.add(fld_balance,              newFieldConstraint(1, 4));
-		this.add(lbl_promptRecipient, newFieldLabelConstraint(0, 5));
-		this.add(fld_recipient,            newFieldConstraint(1, 5));
-		this.add(btn_transfer, newButtonConstraint(0, 6));
-		this.add(btn_back,     newButtonConstraint(2, 6));
+		this.add(fieldWrapper, newWrapperConstraint(0, 4));
+		this.add(btn_transfer, newButtonConstraint(0, 5));
+		this.add(btn_back,     newButtonConstraint(1, 5));
 	}
 
+	private static GridBagConstraints newWrapperConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		return c;
+	}
+	
 	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
-		c.gridwidth = 3;
+		c.gridwidth = 2;
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, bottomInset, 0);
 		return c;
@@ -108,7 +126,7 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
-		c.gridwidth = 2;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c;
@@ -118,6 +136,7 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 
@@ -189,8 +208,9 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 	}
 	
 	@Override
-	public void clearTextFields() {
+	public void clearFieldsAndMsgs() {
 		this.fld_balance.setText("");
 		this.fld_recipient.setText("");
+		this.lbl_error.setText(" ");
 	}
 }

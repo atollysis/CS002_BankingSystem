@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -69,18 +70,34 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 	
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+		
+		JPanel fieldWrapper = new JPanel();
+		fieldWrapper.setLayout(new GridBagLayout());
+		fieldWrapper.add(lbl_promptOldPin,   newFieldLabelConstraint(0, 0));
+		fieldWrapper.add(fld_oldPin,              newFieldConstraint(1, 0));
+		fieldWrapper.add(lbl_promptNewPin,  newFieldLabelConstraint(0, 1));
+		fieldWrapper.add(fld_newPin,             newFieldConstraint(1, 1));
 		
 		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 20));
 		this.add(lbl_error,   newLabelConstraint(0, 2, 0));
-		this.add(lbl_promptOldPin,   newFieldLabelConstraint(0, 3));
-		this.add(fld_oldPin,              newFieldConstraint(1, 3));
-		this.add(lbl_promptNewPin,  newFieldLabelConstraint(0, 4));
-		this.add(fld_newPin,             newFieldConstraint(1, 4));
-		this.add(btn_changePin, newButtonConstraint(0, 5));
-		this.add(btn_back,      newButtonConstraint(1, 5));
+		this.add(fieldWrapper, newWrapperConstraints(0, 3));
+		this.add(btn_changePin, newButtonConstraint(0, 4));
+		this.add(btn_back,      newButtonConstraint(1, 4));
 	}
 
+	private static GridBagConstraints newWrapperConstraints(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		return c;
+	}
+	
 	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
@@ -104,7 +121,7 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
-//		c.gridwidth = 2;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c;
@@ -115,6 +132,7 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 
@@ -168,8 +186,9 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 	}
 	
 	@Override
-	public void clearTextFields() {
+	public void clearFieldsAndMsgs() {
 		this.fld_oldPin.setText("");
 		this.fld_newPin.setText("");
+		this.lbl_error.setText(" ");
 	}
 }
