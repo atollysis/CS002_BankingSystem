@@ -30,7 +30,7 @@ public class Account {
 		return this.pin.equals(pin);
 	}
 	
-	public boolean hasBalance() {
+	public boolean hasEmptyBalance() {
 		return this.balance < 0.01;
 	}
 
@@ -81,10 +81,10 @@ public class Account {
 	}
 	
 	public AccountOperationResult closeAccount() {
-		if (this.hasBalance())
+		if (this.hasEmptyBalance())
 			return AccountOperationResult.BALANCE_EXISTS;
 		
-		this.setClosed(true);
+		this.isClosed = true;
 		return AccountOperationResult.SUCCESS;
 	}
 	

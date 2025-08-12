@@ -104,5 +104,6 @@ public class TransactionManager {
 //		details.setAccountID(); // set beforehand
 		details.setAmount(0.0);
 		details.setRecipientID(null);
+		details.setStatus(AccountOperationResult.SUCCESS);
 	}
 }

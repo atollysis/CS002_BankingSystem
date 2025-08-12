@@ -129,8 +129,10 @@ public class _2_AccountPage extends JPanel implements Settable {
 		});
 		
 		this.btn_delete.addActionListener(e -> {
-			if (this.accountManager.getCurrAccount().hasBalance())
+			if (!this.accountManager.getCurrAccount().hasEmptyBalance()) {
 				this.lbl_error.setText("You still have balance!");
+				return;
+			}
 			
 			this.runner.goToPanel(PanelType.CLOSURE);
 		});

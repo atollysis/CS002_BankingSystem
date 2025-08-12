@@ -97,8 +97,7 @@ public class AccountManager {
 	
 	public ManagerOperationResult closeAccount() {
 		this.currentAccount.closeAccount();
-		CSVParser.updateAccounts(AccountManager.accounts);
-		return ManagerOperationResult.SUCCESS;
+		return CSVParser.updateAccounts(AccountManager.accounts);
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {
