@@ -145,6 +145,6 @@ public class _3_DepositPage extends JPanel {
 	 */
 	public void setDetails(Account account) {
 		this.lbl_accNum.setText("#" + account.getAccountNumber());
-		this.lbl_balance.setText(String.format("%.2f", account.getBalance()));
+		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
 	}
 }
