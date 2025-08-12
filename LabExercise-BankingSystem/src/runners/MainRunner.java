@@ -69,7 +69,7 @@ public class MainRunner extends JFrame {
 	public MainRunner() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		Dimension dims = new Dimension(600, 850);
+		Dimension dims = new Dimension(900, 600);
 		setMinimumSize(dims);
 		setSize(dims);
 		contentPane = new JPanel();
