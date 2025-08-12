@@ -13,9 +13,10 @@ import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.transactions.TransactionManager;
 import banking_system.transactions.TransactionType;
+import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _2_AccountPage extends JPanel {
+public class _2_AccountPage extends JPanel implements Settable {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -134,6 +135,7 @@ public class _2_AccountPage extends JPanel {
 	/*
 	 * SERVICE METHODS
 	 */
+	@Override
 	public void setDetails(Account account) {
 		this.lbl_accNum.setText("#" + account.getAccountNumber());
 		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));

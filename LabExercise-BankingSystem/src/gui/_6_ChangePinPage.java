@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,15 +9,15 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
+import gui.interfaces.Clearable;
+import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _6_ChangePinPage extends JPanel {
+public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -163,7 +162,14 @@ public class _6_ChangePinPage extends JPanel {
 	/*
 	 * SERVICE METHODS
 	 */
+	@Override
 	public void setDetails(Account account) {
 		this.lbl_accNum.setText("#" + account.getAccountNumber());
+	}
+	
+	@Override
+	public void clearTextFields() {
+		this.fld_oldPin.setText("");
+		this.fld_newPin.setText("");
 	}
 }

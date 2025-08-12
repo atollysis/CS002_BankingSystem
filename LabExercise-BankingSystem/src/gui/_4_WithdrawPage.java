@@ -14,9 +14,11 @@ import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
+import gui.interfaces.Clearable;
+import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _4_WithdrawPage extends JPanel {
+public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -135,6 +137,7 @@ public class _4_WithdrawPage extends JPanel {
 					
 				default:
 					// ACCOUNT_INVALID
+					throw new IllegalStateException("Unintended account operation result: " + result);
 			}
 		});
 		
@@ -147,8 +150,14 @@ public class _4_WithdrawPage extends JPanel {
 	/*
 	 * SERVICE METHODS
 	 */
+	@Override
 	public void setDetails(Account account) {
 		this.lbl_accNum.setText("#" + account.getAccountNumber());
 		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
+	}
+	
+	@Override
+	public void clearTextFields() {
+		this.fld_balance.setText("");
 	}
 }

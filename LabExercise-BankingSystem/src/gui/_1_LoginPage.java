@@ -13,9 +13,10 @@ import javax.swing.JTextField;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.ManagerOperationResult;
 import banking_system.transactions.TransactionManager;
+import gui.interfaces.Clearable;
 import runners.MainRunner;
 
-public class _1_LoginPage extends JPanel {
+public class _1_LoginPage extends JPanel implements Clearable {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -147,6 +148,7 @@ public class _1_LoginPage extends JPanel {
 				default:
 					// IO_PROBLEM
 					// INVALID_ACCOUNT_EXISTS
+					throw new IllegalStateException("Unintended manager operation result: " + result);
 			}
 		});
 		
@@ -183,7 +185,17 @@ public class _1_LoginPage extends JPanel {
 					// INVALID_ACCOUNT_CLOSED,
 					// INVALID_PIN_WRONG,
 					// IO_PROBLEM;
+					throw new IllegalStateException("Unintended manager operation result: " + result);
 			}
 		});
+	}
+	
+	/*
+	 * SERVICE METHODS
+	 */
+	@Override
+	public void clearTextFields() {
+		this.fld_accNum.setText("");
+		this.fld_accPin.setText("");
 	}
 }

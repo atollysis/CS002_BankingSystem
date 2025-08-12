@@ -99,6 +99,10 @@ public class MainRunner extends JFrame {
 		this.panelTransfer.setDetails(account);
 	}
 
+	public void resetFields() {
+		//
+	}
+	
 	/*
 	 * GETTER
 	 */
