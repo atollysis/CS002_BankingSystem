@@ -24,7 +24,6 @@ public class AccountManager {
 	/*
 	 * SUPPORT METHODS
 	 */
-	
 	private static boolean isValidAccountNumber(String accountNumber) {
 		if (accountNumber.length() < 4)
 			return false;
@@ -34,11 +33,6 @@ public class AccountManager {
 				return false;
 		}
 		return true;
-	}
-	
-	private void checkLoggedIn() {
-		if (this.currentAccount == null)
-			throw new IllegalStateException("Currently not logged in to any account.");
 	}
 	
 	/*
