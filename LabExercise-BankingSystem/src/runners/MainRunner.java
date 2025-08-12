@@ -16,6 +16,7 @@ import gui._1_LoginPage;
 import gui._2_AccountPage;
 import gui._3_DepositPage;
 import gui._4_WithdrawPage;
+import gui._5_TransferPage;
 
 public class MainRunner extends JFrame {
 
@@ -34,6 +35,7 @@ public class MainRunner extends JFrame {
 	private _2_AccountPage panelAccount;
 	private _3_DepositPage panelDeposit;
 	private _4_WithdrawPage panelWithdraw;
+	private _5_TransferPage panelTransfer;
 	
 	/**
 	 * Launch the application.
@@ -73,11 +75,13 @@ public class MainRunner extends JFrame {
 		panelAccount = new _2_AccountPage(this);
 		panelDeposit = new _3_DepositPage(this);
 		panelWithdraw = new _4_WithdrawPage(this);
+		panelTransfer = new _5_TransferPage(this);
 		
 		card.addLayoutComponent(this.panelLogin, PanelType.LOGIN);
 		card.addLayoutComponent(this.panelAccount, PanelType.ACCOUNT);
 		card.addLayoutComponent(this.panelDeposit, PanelType.DEPOSIT);
 		card.addLayoutComponent(this.panelWithdraw, PanelType.WITHDRAW);
+		card.addLayoutComponent(this.panelTransfer, PanelType.TRANSFER);
 	}
 	
 	/*
@@ -92,6 +96,7 @@ public class MainRunner extends JFrame {
 		this.panelAccount.setDetails(account);
 		this.panelDeposit.setDetails(account);
 		this.panelWithdraw.setDetails(account);
+		this.panelTransfer.setDetails(account);
 	}
 
 	/*

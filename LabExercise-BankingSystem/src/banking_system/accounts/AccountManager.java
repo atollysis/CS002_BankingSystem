@@ -24,21 +24,6 @@ public class AccountManager {
 	/*
 	 * SUPPORT METHODS
 	 */
-	private static Account findAccount(String accountNumber) {
-		if (AccountManager.accounts == null)
-			throw new IllegalStateException("Account list has not been initialized.");
-		if (AccountManager.accounts.isEmpty())
-			throw new IllegalStateException("Account list is empty.");
-		
-		List<Account> result = AccountManager.accounts
-				.stream()
-				.filter(acc -> acc.getAccountNumber().equals(accountNumber))
-				.toList();
-		if (result.size() != 1)
-			return null;
-		else
-			return result.get(0);
-	}
 	
 	private static boolean isValidAccountNumber(String accountNumber) {
 		if (accountNumber.length() < 4)
@@ -70,6 +55,22 @@ public class AccountManager {
 	/*
 	 * SERVICE METHODS
 	 */
+	public static Account findAccount(String accountNumber) {
+		if (AccountManager.accounts == null)
+			throw new IllegalStateException("Account list has not been initialized.");
+		if (AccountManager.accounts.isEmpty())
+			throw new IllegalStateException("Account list is empty.");
+		
+		List<Account> result = AccountManager.accounts
+				.stream()
+				.filter(acc -> acc.getAccountNumber().equals(accountNumber))
+				.toList();
+		if (result.size() != 1)
+			return null;
+		else
+			return result.get(0);
+	}
+	
 	public static boolean accountNumberExists(String accountNumber) {
 		return AccountManager.findAccount(accountNumber) != null;
 	}

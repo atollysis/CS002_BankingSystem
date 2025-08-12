@@ -16,7 +16,7 @@ import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
 import runners.MainRunner;
 
-public class _4_WithdrawPage extends JPanel {
+public class _5_TransferPage extends JPanel {
 	/*
 	 * ATTRIBUTES
 	 */
@@ -33,14 +33,17 @@ public class _4_WithdrawPage extends JPanel {
 	private JLabel lbl_balance;
 	
 	private JLabel lbl_error;
+	private JLabel lbl_promptBalance;
+	private JLabel lbl_promptRecipient;
 	private JTextField fld_balance;
-	private JButton btn_withdraw;
+	private JTextField fld_recipient;
+	private JButton btn_transfer;
 	private JButton btn_back;
 
 	/**
 	 * Create the panel.
 	 */
-	public _4_WithdrawPage(MainRunner runner) {
+	public _5_TransferPage(MainRunner runner) {
 		this.runner = runner;
 		this.accountManager = runner.getAccountManager();
 		this.transactionManager = runner.getTransactionManager();
@@ -51,14 +54,17 @@ public class _4_WithdrawPage extends JPanel {
 	}
 	
 	private void setupComponents() {
-		this.lbl_title = new JLabel("WITHDRAW");
+		this.lbl_title = new JLabel("TRANSFER");
 		lbl_title.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
 		this.lbl_balance = new JLabel("Php 0.00");
 		
 		this.lbl_error = new JLabel(" ");
+		this.lbl_promptBalance = new JLabel("Amount");
+		this.lbl_promptRecipient = new JLabel("Account Number");
 		this.fld_balance = new JTextField();
-		this.btn_withdraw = new JButton("Withdraw");
+		this.fld_recipient = new JTextField();
+		this.btn_transfer = new JButton("Transfer");
 		this.btn_back = new JButton("Back");
 	}
 	
@@ -69,18 +75,30 @@ public class _4_WithdrawPage extends JPanel {
 		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
 		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
 		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
-		this.add(fld_balance, newFieldConstraint(0, 4));
-		this.add(btn_withdraw, newButtonConstraint(0, 5));
-		this.add(btn_back,    newButtonConstraint(1, 5));
+		this.add(lbl_promptBalance,   newFieldLabelConstraint(0, 4));
+		this.add(fld_balance,              newFieldConstraint(1, 4));
+		this.add(lbl_promptRecipient, newFieldLabelConstraint(0, 5));
+		this.add(fld_recipient,            newFieldConstraint(1, 5));
+		this.add(btn_transfer, newButtonConstraint(0, 6));
+		this.add(btn_back,     newButtonConstraint(2, 6));
 	}
 
 	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, bottomInset, 0);
+		return c;
+	}
+	
+	private static GridBagConstraints newFieldLabelConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.insets = new Insets(0, 0, 0, 0);
 		return c;
 	}
 	
@@ -104,23 +122,36 @@ public class _4_WithdrawPage extends JPanel {
 	}
 	
 	private void setupInteractions() {
-		this.btn_withdraw.addActionListener(e -> {
+		this.btn_transfer.addActionListener(e -> {
 			double amount;
 			try {
 				amount = Double.parseDouble(this.fld_balance.getText());
 			} catch (NumberFormatException ex) {
 				amount = 0.0;
 			}
-			AccountOperationResult result = this.accountManager.getCurrAccount().withdraw(amount);
+			Account recipientAccount = AccountManager.findAccount(this.fld_recipient.getText());
+			AccountOperationResult result = this.accountManager.getCurrAccount().transfer(recipientAccount, amount);
 			this.transactionManager.setAmount(amount);
-			this.transactionManager.setRecipientID(null);
 			this.transactionManager.setStatus(result);
+			if (recipientAccount != null)
+				this.transactionManager.setRecipientID(Integer.toString(recipientAccount.getID()));
+			else
+				this.transactionManager.setRecipientID(null);
 			
+			/*
+			 * I could bring down the transaction manager call here...
+			 * but I want things to be consistent between all the panels.
+			 */
 			switch (result) {
 				case SUCCESS:
 					this.transactionManager.addNewTransaction();
 					this.runner.updateAccountDetails();
 					this.runner.goToPanel(PanelType.ACCOUNT);
+					break;
+			
+				case ACCOUNT_INVALID:
+					this.transactionManager.addNewTransaction();
+					this.lbl_error.setText("Account not found or is invalid.");
 					break;
 					
 				case BALANCE_INSUFFICIENT:
@@ -134,8 +165,9 @@ public class _4_WithdrawPage extends JPanel {
 					break;
 					
 				default:
-					// ACCOUNT_INVALID
+					// none
 			}
+			
 		});
 		
 		this.btn_back.addActionListener(e -> {
