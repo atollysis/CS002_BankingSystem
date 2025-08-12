@@ -3,7 +3,6 @@ package banking_system.transactions;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import banking_system.accounts.Account;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.accounts.SessionDetails;
 import banking_system.parsers.CSVParser;

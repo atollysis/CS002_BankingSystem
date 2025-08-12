@@ -64,6 +64,18 @@ public class Account {
 		return AccountOperationResult.SUCCESS;
 	}
 	
+	public AccountOperationResult modifyPin(String oldPin, String newPin) {
+		if (oldPin == null || newPin == null)
+			return AccountOperationResult.PIN_INVALID;
+		if (!AccountManager.isValidPin(newPin))
+			return AccountOperationResult.PIN_INVALID;
+		if (!this.verify(oldPin))
+			return AccountOperationResult.PIN_WRONG;
+		
+		this.pin = newPin;
+		return AccountOperationResult.SUCCESS;
+	}
+	
 	/*
 	 * GETTERS
 	 */
@@ -98,10 +110,6 @@ public class Account {
 	 */
 	public void setClosed(boolean isClosed) {
 		this.isClosed = isClosed;
-	}
-	
-	public void setPin(String pin) {
-		this.pin = pin;
 	}
 
 	/*

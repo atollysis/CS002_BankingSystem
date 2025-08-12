@@ -5,7 +5,10 @@ public enum AccountOperationResult {
 	ACCOUNT_INVALID,		// recipient account doesn't exist
 	
 	BALANCE_INVALID,		// <= 0
-	BALANCE_INSUFFICIENT;	// amount > balance
+	BALANCE_INSUFFICIENT,	// amount > balance
+	
+	PIN_INVALID,
+	PIN_WRONG;
 	
 	@Override
 	public String toString() {

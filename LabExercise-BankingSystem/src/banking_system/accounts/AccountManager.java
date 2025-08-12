@@ -36,7 +36,15 @@ public class AccountManager {
 		return true;
 	}
 	
-	private static boolean isValidPin(String pin) {
+	private void checkLoggedIn() {
+		if (this.currentAccount == null)
+			throw new IllegalStateException("Currently not logged in to any account.");
+	}
+	
+	/*
+	 * SERVICE METHODS
+	 */
+	public static boolean isValidPin(String pin) {
 		if (pin.length() < 4)
 			return false;
 		
@@ -47,14 +55,6 @@ public class AccountManager {
 		return true;
 	}
 	
-	private void checkLoggedIn() {
-		if (this.currentAccount == null)
-			throw new IllegalStateException("Currently not logged in to any account.");
-	}
-	
-	/*
-	 * SERVICE METHODS
-	 */
 	public static Account findAccount(String accountNumber) {
 		if (AccountManager.accounts == null)
 			throw new IllegalStateException("Account list has not been initialized.");
@@ -108,16 +108,6 @@ public class AccountManager {
 				this.currentAccount.withdraw(this.currentAccount.getBalance());
 		}
 		this.currentAccount.setClosed(true);
-	}
-	
-	public ManagerOperationResult modifyAccountPin(String oldPin, String newPin) {
-		this.checkLoggedIn();
-		
-		if (!this.currentAccount.verify(oldPin))
-			return ManagerOperationResult.INVALID_PIN_FORMAT;
-		
-		this.currentAccount.setPin(newPin);
-		return ManagerOperationResult.SUCCESS;
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {
