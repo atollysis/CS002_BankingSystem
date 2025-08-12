@@ -143,8 +143,9 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 			AccountOperationResult result = this.accountManager.getCurrAccount().modifyPin(
 					String.valueOf(this.fld_oldPin.getPassword()),
 					String.valueOf(this.fld_newPin.getPassword()));
-			// Session details already set beforehand
+			this.transactionManager.setPinChangeTransaction();
 			this.transactionManager.setStatus(result);
+			this.runner.setAccountId();
 			
 			switch (result) {
 				case SUCCESS:

@@ -9,6 +9,5 @@ public enum PanelType {
 	TRANSFER,
 	
 	CHANGE_PIN,
-	DELETE,
-	DELETE_BALANCE;
+	CLOSURE;
 }

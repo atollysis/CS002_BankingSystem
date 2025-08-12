@@ -15,6 +15,7 @@ import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
+import banking_system.transactions.TransactionType;
 import gui.interfaces.Clearable;
 import gui.interfaces.Settable;
 import runners.MainRunner;
@@ -117,6 +118,8 @@ public class _3_DepositPage extends JPanel implements Settable, Clearable {
 				amount = 0.0;
 			}
 			AccountOperationResult result = this.accountManager.getCurrAccount().deposit(amount);
+			this.transactionManager.setTransactionType(TransactionType.DEPOSIT);
+			this.runner.setAccountId();
 			this.transactionManager.setAmount(amount);
 			this.transactionManager.setRecipientID(null);
 			this.transactionManager.setStatus(result);

@@ -55,7 +55,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 	}
 	
 	private void setupComponents() {
-		this.lbl_welcome = new JLabel("Welcome!");
+		this.lbl_welcome = new JLabel("ACCOUNT");
 		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
 		this.lbl_balance = new JLabel("Php 0.00");
@@ -107,28 +107,24 @@ public class _2_AccountPage extends JPanel implements Settable {
 	
 	private void setupInteractions() {
 		this.btn_deposit.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.DEPOSIT);
 			this.runner.goToPanel(PanelType.DEPOSIT);
 		});
 		
 		this.btn_withdraw.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.WITHDRAW);
 			this.runner.goToPanel(PanelType.WITHDRAW);
 		});
 		
 		this.btn_transfer.addActionListener(e -> {
-			this.transactionManager.setTransactionType(TransactionType.TRANSFER);
 			this.runner.goToPanel(PanelType.TRANSFER);
 		});
 		
 		this.btn_logout.addActionListener(e -> {
 			this.accountManager.logout();
-			this.transactionManager.clearSessionDetails();
+			this.transactionManager.resetSessionDetails();
 			this.runner.goToPanel(PanelType.LOGIN);
 		});
 		
 		this.btn_changePin.addActionListener(e -> {
-			this.transactionManager.setPinChangeTransaction();
 			this.runner.goToPanel(PanelType.CHANGE_PIN);
 		});
 		
@@ -136,8 +132,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 			if (this.accountManager.getCurrAccount().hasBalance())
 				this.lbl_error.setText("You still have balance!");
 			
-			this.transactionManager.setAccountClosureTransaction();
-			this.runner.goToPanel(PanelType.DELETE);
+			this.runner.goToPanel(PanelType.CLOSURE);
 		});
 	}
 	

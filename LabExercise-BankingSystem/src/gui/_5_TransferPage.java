@@ -15,6 +15,7 @@ import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.transactions.TransactionManager;
+import banking_system.transactions.TransactionType;
 import gui.interfaces.Clearable;
 import gui.interfaces.Settable;
 import runners.MainRunner;
@@ -152,6 +153,8 @@ public class _5_TransferPage extends JPanel implements Settable, Clearable {
 			}
 			Account recipientAccount = AccountManager.findAccount(this.fld_recipient.getText());
 			AccountOperationResult result = this.accountManager.getCurrAccount().transfer(recipientAccount, amount);
+			this.transactionManager.setTransactionType(TransactionType.TRANSFER);
+			this.runner.setAccountId();
 			this.transactionManager.setAmount(amount);
 			this.transactionManager.setStatus(result);
 			if (recipientAccount != null)

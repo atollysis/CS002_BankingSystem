@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -20,6 +21,7 @@ import gui._3_DepositPage;
 import gui._4_WithdrawPage;
 import gui._5_TransferPage;
 import gui._6_ChangePinPage;
+import gui._7_ClosurePage;
 import gui.interfaces.Clearable;
 import gui.interfaces.Settable;
 
@@ -31,18 +33,19 @@ public class MainRunner extends JFrame {
 	private static final long serialVersionUID = 1L;
 	// Self
 	private JPanel contentPane;
-	private CardLayout card = new CardLayout(0, 0);
+	private CardLayout card;
 	// Back-end
 	private AccountManager accountManager;
 	private TransactionManager transactionManager;
 	// Panels
-	private List<JPanel> panels;
+	private Map<PanelType, JPanel> panels;
 	private _1_LoginPage panelLogin;
 	private _2_AccountPage panelAccount;
 	private _3_DepositPage panelDeposit;
 	private _4_WithdrawPage panelWithdraw;
 	private _5_TransferPage panelTransfer;
 	private _6_ChangePinPage panelChangePin;
+	private _7_ClosurePage panelClosure;
 	
 	/**
 	 * Launch the application.
@@ -70,35 +73,37 @@ public class MainRunner extends JFrame {
 		setMinimumSize(dims);
 		setSize(dims);
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+		contentPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+		
+		card = new CardLayout();
 		setContentPane(contentPane);
 		contentPane.setLayout(card);
 		
 		accountManager = new AccountManager();
 		transactionManager = new TransactionManager();
 		
-		panelLogin = new _1_LoginPage(this);
-		panelAccount = new _2_AccountPage(this);
-		panelDeposit = new _3_DepositPage(this);
-		panelWithdraw = new _4_WithdrawPage(this);
-		panelTransfer = new _5_TransferPage(this);
-		panelChangePin = new _6_ChangePinPage(this);
+		panelLogin		= new _1_LoginPage(this);
+		panelAccount	= new _2_AccountPage(this);
+		panelDeposit	= new _3_DepositPage(this);
+		panelWithdraw	= new _4_WithdrawPage(this);
+		panelTransfer	= new _5_TransferPage(this);
+		panelChangePin	= new _6_ChangePinPage(this);
+		panelClosure	= new _7_ClosurePage(this);
 		
-		this.panels = List.of(
-				panelLogin,
-				panelAccount,
-				panelDeposit,
-				panelWithdraw,
-				panelTransfer,
-				panelChangePin);
+		this.panels = Map.ofEntries(
+				Map.entry(PanelType.LOGIN, 		panelLogin),
+				Map.entry(PanelType.ACCOUNT,	panelAccount),
+				Map.entry(PanelType.DEPOSIT,	panelDeposit),
+				Map.entry(PanelType.WITHDRAW,	panelWithdraw),
+				Map.entry(PanelType.TRANSFER,	panelTransfer),
+				Map.entry(PanelType.CHANGE_PIN,	panelChangePin),
+				Map.entry(PanelType.CLOSURE,	panelClosure)
+				);
 		
-		card.addLayoutComponent(this.panelLogin, PanelType.LOGIN);
-		card.addLayoutComponent(this.panelAccount, PanelType.ACCOUNT);
-		card.addLayoutComponent(this.panelDeposit, PanelType.DEPOSIT);
-		card.addLayoutComponent(this.panelWithdraw, PanelType.WITHDRAW);
-		card.addLayoutComponent(this.panelTransfer, PanelType.TRANSFER);
-		card.addLayoutComponent(this.panelChangePin, PanelType.CHANGE_PIN);
+		for (PanelType type: this.panels.keySet())
+			contentPane.add(this.panels.get(type), type.toString());
+		
+		card.show(contentPane, PanelType.LOGIN.toString());
 	}
 	
 	/*
@@ -106,22 +111,29 @@ public class MainRunner extends JFrame {
 	 */
 	public void goToPanel(PanelType panel) {
 		this.resetFields();
+		if (panel == PanelType.ACCOUNT)
+			this.setAccountId();
 		card.show(contentPane, panel.toString());
 	}
 	
 	public void updateAccountDetails() {
 		Account account = this.accountManager.getCurrAccount();
-		for (Component panel : this.panels) {
+		for (Component panel : this.panels.values()) {
 			if (panel instanceof Settable)
 				((Settable) panel).setDetails(account);
 		}
 	}
 
 	public void resetFields() {
-		for (Component comp : this.panels) {
+		for (Component comp : this.panels.values()) {
 			if (comp instanceof Clearable)
 				((Clearable) comp).clearFieldsAndMsgs();
 		}
+	}
+	
+	public void setAccountId() {
+		int id = this.accountManager.getCurrAccount().getID();
+		this.transactionManager.setAccountID(Integer.toString(id));
 	}
 	
 	/*

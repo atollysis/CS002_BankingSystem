@@ -90,13 +90,14 @@ public class CSVParser {
 			String row = reader.readLine(); // consume header
 			while ((row = reader.readLine()) != null) {
 				String[] values = row.split(",");
+				TransactionType type = TransactionType.convert(values[2]);
 				Transaction currTransaction = new Transaction(
 						Integer.parseInt(values[0]),		// ID
 						LocalDateTime.parse(values[1]),		// Timestamp
-						TransactionType.convert(values[2]),	// Transaction Type
+						type,	// Transaction Type
 						CSVParser.checkID(values[3]),					// Account ID
 						Double.parseDouble(values[4]),		// Amount
-						CSVParser.parseRecipientID(values[5]),		// Recipient ID (nullable)
+						CSVParser.parseRecipientID(values[5], type),		// Recipient ID (nullable)
 						AccountOperationResult.convert(values[6]) // Status
 						);
 				output.add(currTransaction);
@@ -120,12 +121,13 @@ public class CSVParser {
 	
 	private static String checkID(String id) throws IOException {
 		if (!isAllDigits(id))
-			throw new IOException("Account ID contains non-digits.");
+			throw new IOException("Account ID contains non-digits: " + id);
 		return id;
 	}
 	
-	private static String parseRecipientID(String value) throws IOException {
-		CSVParser.checkID(value);
+	private static String parseRecipientID(String value, TransactionType type) throws IOException {
+		if (type == TransactionType.TRANSFER)
+			CSVParser.checkID(value);
 		return value.toLowerCase().equals("null") ? null : value.toLowerCase();
 	}
 	

@@ -19,6 +19,7 @@ public class TransactionManager {
 	 */
 	public TransactionManager() {
 		this.lazyLoadTransactions();
+		this.resetSessionDetails();
 	}
 	
 	/*
@@ -48,7 +49,7 @@ public class TransactionManager {
 				);
 		transactions.add(newTransaction);
 		CSVParser.updateTransactions(transactions);
-		this.clearSessionDetails();
+		this.resetSessionDetails();
 	}
 	
 	public void updateCSVFile() {
@@ -58,7 +59,7 @@ public class TransactionManager {
 	/*
 	 * SETTERS
 	 */
-	public void clearSessionDetails() {
+	public void resetSessionDetails() {
 		this.details = new SessionDetails();
 	}
 	

@@ -92,9 +92,13 @@ public class _7_ClosurePage extends JPanel implements Settable {
 	
 	private void setupInteractions() {
 		this.btn_yes.addActionListener(e -> {
+			this.runner.setAccountId();
+			this.transactionManager.setAccountClosureTransaction();
+			this.transactionManager.addNewTransaction();
+			
 			this.accountManager.closeAccount();
 			this.accountManager.logout();
-			this.transactionManager.addNewTransaction();
+			
 			this.runner.goToPanel(PanelType.LOGIN);
 		});
 		

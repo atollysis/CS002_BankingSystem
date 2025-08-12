@@ -1,9 +1,11 @@
 package gui;
 
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,6 +30,8 @@ public class _1_LoginPage extends JPanel implements Clearable {
 	private final TransactionManager transactionManager;
 	
 	// Swing
+	private JLabel lbl_welcome;
+	
 	private JLabel lbl_accNum;
 	private JTextField fld_accNum;
 	
@@ -52,6 +56,8 @@ public class _1_LoginPage extends JPanel implements Clearable {
 	}
 	
 	private void setupComponents() {
+		this.lbl_welcome = new JLabel("Welcome!");
+		
 		this.lbl_accNum = new JLabel("Account Number");
 		this.fld_accNum = new JTextField();
 		
@@ -65,22 +71,60 @@ public class _1_LoginPage extends JPanel implements Clearable {
 
 	private void setupLayout() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		this.add(this.lbl_accNum, newLabelConstraint(0, 0));
-		this.add(this.fld_accNum, newFieldConstraint(1, 0));
-		this.add(this.lbl_accPin, newLabelConstraint(0, 1));
-		this.add(this.fld_accPin, newFieldConstraint(1, 1));
-		this.add(this.lbl_error,  newErrLabelConstraint(0, 2));
+		JPanel fieldWrapper = new JPanel();
+		fieldWrapper.setLayout(new GridBagLayout());
+		fieldWrapper.add(lbl_accNum, newFieldLabelConstraint(0, 0));
+		fieldWrapper.add(fld_accNum,      newFieldConstraint(1, 0));
+		fieldWrapper.add(lbl_accPin, newFieldLabelConstraint(0, 1));
+		fieldWrapper.add(fld_accPin,      newFieldConstraint(1, 1));
+		
+		this.add(lbl_welcome, newCenteredLabelConstraint(0, 0));
+		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
+		this.add(this.lbl_error,  newErrLabelConstraint(0, 1));
+		this.add(fieldWrapper,     newWrapperConstraint(0, 2));
 		this.add(this.btn_login,  newButtonConstraint(0, 3));
 		this.add(this.btn_create, newButtonConstraint(1, 3));
 	}
 	
-	private static GridBagConstraints newLabelConstraint(int x, int y) {
+	private static GridBagConstraints newCenteredLabelConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.gridwidth = 2;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		return c;
+	}
+	
+	private static GridBagConstraints newWrapperConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(0, 0, 0, 0);
+		return c;
+	}
+	
+	private static GridBagConstraints newFieldLabelConstraint(int x, int y) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
 		c.anchor = GridBagConstraints.LINE_END;
-		c.insets = new Insets(5, 10, 5, 5);
+		c.insets = new Insets(0, 0, 0, 0);
+		return c;
+	}
+	
+	private static GridBagConstraints newFieldConstraint(int x, int y) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		c.weightx = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(5, 5, 5, 5);
 		return c;
 	}
 	
@@ -94,19 +138,12 @@ public class _1_LoginPage extends JPanel implements Clearable {
 		return c;
 	}
 	
-	private static GridBagConstraints newFieldConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c;
-	}
-	
 	private static GridBagConstraints newButtonConstraint(int x, int y) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 
 	}
@@ -119,8 +156,6 @@ public class _1_LoginPage extends JPanel implements Clearable {
 			
 			switch (result) {
 				case SUCCESS:
-					String id = this.accountManager.getCurrAccount().getAccountNumber();
-					this.transactionManager.setAccountID(id);
 					this.runner.updateAccountDetails();
 					this.runner.goToPanel(PanelType.ACCOUNT);
 					break;
