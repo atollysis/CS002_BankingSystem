@@ -1,31 +1,19 @@
 package gui.panels;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import banking_system.accounts.Account;
-import banking_system.accounts.AccountManager;
-import banking_system.transactions.TransactionManager;
-import gui.interfaces.Settable;
+import banking_system.accounts.ManagerOperationResult;
 import runners.MainRunner;
 
-public class _2_AccountPage extends JPanel implements Settable {
+public class _2_AccountPage extends BankingPanel {
 	/*
 	 * ATTRIBUTES
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	// Controllers
-	private final MainRunner runner;
-	private final AccountManager accountManager;
-	private final TransactionManager transactionManager;
 		
 	// Components
 	private JLabel lbl_welcome;
@@ -44,16 +32,14 @@ public class _2_AccountPage extends JPanel implements Settable {
 	 * Create the panel.
 	 */
 	public _2_AccountPage(MainRunner runner) {
-		this.runner = runner;
-		this.accountManager = runner.getAccountManager();
-		this.transactionManager = runner.getTransactionManager();
-		
-		this.setupComponents();
-		this.setupLayout();
-		this.setupInteractions();
+		super(runner);
 	}
 	
-	private void setupComponents() {
+	/*
+	 * SUPPORT METHODS
+	 */
+	@Override
+	protected void setupComponents() {
 		this.lbl_welcome = new JLabel("ACCOUNT");
 		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
@@ -67,44 +53,26 @@ public class _2_AccountPage extends JPanel implements Settable {
 		this.btn_changePin = new JButton("Change PIN");
 		this.btn_delete = new JButton("Close Account");
 	}
-	
-	private void setupLayout() {
+
+	@Override
+	protected void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		this.add(lbl_welcome, newLabelConstraint(0, 0, 0));
-		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
-		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
-		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
-		this.add(btn_deposit,  newButtonConstraint(0, 4));
-		this.add(btn_withdraw, newButtonConstraint(0, 5));
-		this.add(btn_transfer, newButtonConstraint(0, 6));
-		this.add(btn_logout,    newButtonConstraint(1, 4));
-		this.add(btn_changePin, newButtonConstraint(1, 5));
-		this.add(btn_delete,    newButtonConstraint(1, 6));
+		this.add(lbl_welcome, BankingPanel.newCenterLabelConstraint(0, 0, 0));
+		this.add(lbl_accNum,  BankingPanel.newCenterLabelConstraint(0, 1, 0));
+		this.add(lbl_balance, BankingPanel.newCenterLabelConstraint(0, 2, 20));
+		this.add(lbl_error,   BankingPanel.newCenterLabelConstraint(0, 3, 0));
+		this.add(btn_deposit,   BankingPanel.newButtonConstraint(0, 4));
+		this.add(btn_withdraw,  BankingPanel.newButtonConstraint(0, 5));
+		this.add(btn_transfer,  BankingPanel.newButtonConstraint(0, 6));
+		this.add(btn_logout,    BankingPanel.newButtonConstraint(1, 4));
+		this.add(btn_changePin, BankingPanel.newButtonConstraint(1, 5));
+		this.add(btn_delete,    BankingPanel.newButtonConstraint(1, 6));
 	}
-	
-	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, bottomInset, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newButtonConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c; 
-	}
-	
-	private void setupInteractions() {
+
+	@Override
+	protected void setupInteractions() {
 		this.btn_deposit.addActionListener(e -> {
 			this.runner.goToPanel(PanelType.DEPOSIT);
 		});
@@ -128,7 +96,8 @@ public class _2_AccountPage extends JPanel implements Settable {
 		});
 		
 		this.btn_delete.addActionListener(e -> {
-			switch (this.accountManager.closeAccount()) {
+			ManagerOperationResult result = this.accountManager.closeAccount();
+			switch (result) {
 				case SUCCESS:
 					this.runner.goToPanel(PanelType.CLOSURE);
 					break;
@@ -138,6 +107,7 @@ public class _2_AccountPage extends JPanel implements Settable {
 					break;
 					
 				case IO_PROBLEM:
+					this.lbl_error.setText("ERROR: Problem in reading/writing.");
 					throw new IllegalStateException("Error in reading/writing to database.");
 	
 				default:
@@ -148,17 +118,22 @@ public class _2_AccountPage extends JPanel implements Settable {
 					// INVALID_ACCOUNT_NOT_CLOSED
 					// INVALID_PIN_FORMAT
 					// INVALID_PIN_WRONG
-					throw new IllegalStateException("Unexpected operation result returned.");
+					throw new IllegalStateException("Unexpected operation result returned: " + result);
 			}
 		});
 	}
-	
+
 	/*
 	 * SERVICE METHODS
 	 */
 	@Override
+	public void clearFieldsMessages() {
+		this.lbl_error.setText(" ");
+	}
+	
+	@Override
 	public void setDetails(Account account) {
-		this.lbl_accNum.setText("#" + account.getAccountNumber());
+		this.lbl_accNum.setText(String.format("#%s", account.getAccountNumber()));
 		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
 		this.lbl_error.setText(" ");
 	}

@@ -1,7 +1,6 @@
 package runners;
 
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.Map;
@@ -13,8 +12,7 @@ import javax.swing.border.EmptyBorder;
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.transactions.TransactionManager;
-import gui.interfaces.Clearable;
-import gui.interfaces.Settable;
+import gui.panels.BankingPanel;
 import gui.panels.PanelType;
 import gui.panels._1_LoginPage;
 import gui.panels._2_AccountPage;
@@ -37,14 +35,7 @@ public class MainRunner extends JFrame {
 	private AccountManager accountManager;
 	private TransactionManager transactionManager;
 	// Panels
-	private Map<PanelType, JPanel> panels;
-	private _1_LoginPage panelLogin;
-	private _2_AccountPage panelAccount;
-	private _3_DepositPage panelDeposit;
-	private _4_WithdrawPage panelWithdraw;
-	private _5_TransferPage panelTransfer;
-	private _6_ChangePinPage panelChangePin;
-	private _7_ClosurePage panelClosure;
+	private Map<PanelType, BankingPanel> panels;
 	
 	/**
 	 * Launch the application.
@@ -78,25 +69,19 @@ public class MainRunner extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(card);
 		
+		// Back-end
 		accountManager = new AccountManager();
 		transactionManager = new TransactionManager();
 		
-		panelLogin		= new _1_LoginPage(this);
-		panelAccount	= new _2_AccountPage(this);
-		panelDeposit	= new _3_DepositPage(this);
-		panelWithdraw	= new _4_WithdrawPage(this);
-		panelTransfer	= new _5_TransferPage(this);
-		panelChangePin	= new _6_ChangePinPage(this);
-		panelClosure	= new _7_ClosurePage(this);
-		
+		// Front-end
 		this.panels = Map.ofEntries(
-				Map.entry(PanelType.LOGIN, 		panelLogin),
-				Map.entry(PanelType.ACCOUNT,	panelAccount),
-				Map.entry(PanelType.DEPOSIT,	panelDeposit),
-				Map.entry(PanelType.WITHDRAW,	panelWithdraw),
-				Map.entry(PanelType.TRANSFER,	panelTransfer),
-				Map.entry(PanelType.CHANGE_PIN,	panelChangePin),
-				Map.entry(PanelType.CLOSURE,	panelClosure)
+				Map.entry(PanelType.LOGIN, 		new _1_LoginPage(this)),
+				Map.entry(PanelType.ACCOUNT,	new _2_AccountPage(this)),
+				Map.entry(PanelType.DEPOSIT,	new _3_DepositPage(this)),
+				Map.entry(PanelType.WITHDRAW,	new _4_WithdrawPage(this)),
+				Map.entry(PanelType.TRANSFER,	new _5_TransferPage(this)),
+				Map.entry(PanelType.CHANGE_PIN,	new _6_ChangePinPage(this)),
+				Map.entry(PanelType.CLOSURE,	new _7_ClosurePage(this))
 				);
 		
 		for (PanelType type: this.panels.keySet())
@@ -117,17 +102,13 @@ public class MainRunner extends JFrame {
 	
 	public void updateAccountDetails() {
 		Account account = this.accountManager.getCurrAccount();
-		for (Component panel : this.panels.values()) {
-			if (panel instanceof Settable)
-				((Settable) panel).setDetails(account);
-		}
+		for (BankingPanel panel : this.panels.values())
+			panel.setDetails(account);
 	}
 
 	public void resetFields() {
-		for (Component comp : this.panels.values()) {
-			if (comp instanceof Clearable)
-				((Clearable) comp).clearFieldsAndMsgs();
-		}
+		for (BankingPanel panel : this.panels.values())
+			panel.clearFieldsMessages();
 	}
 	
 	public void setAccountId() {

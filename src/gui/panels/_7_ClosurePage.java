@@ -1,30 +1,18 @@
 package gui.panels;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import banking_system.accounts.Account;
-import banking_system.accounts.AccountManager;
-import banking_system.transactions.TransactionManager;
-import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _7_ClosurePage extends JPanel implements Settable {
+public class _7_ClosurePage extends BankingPanel {
 	/*
 	 * ATTRIBUTES
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	// Controllers
-	private final MainRunner runner;
-	private final AccountManager accountManager;
-	private final TransactionManager transactionManager;
 		
 	// Components
 	private JLabel lbl_title;
@@ -38,16 +26,14 @@ public class _7_ClosurePage extends JPanel implements Settable {
 	 * Create the panel.
 	 */
 	public _7_ClosurePage(MainRunner runner) {
-		this.runner = runner;
-		this.accountManager = runner.getAccountManager();
-		this.transactionManager = runner.getTransactionManager();
-		
-		this.setupComponents();
-		this.setupLayout();
-		this.setupInteractions();
+		super(runner);
 	}
 	
-	private void setupComponents() {
+	/*
+	 * SUPPORT METHODS
+	 */
+	@Override
+	protected void setupComponents() {
 		this.lbl_title = new JLabel("CLOSE ACCOUNT");
 		lbl_title.setFont(new Font("Arial", Font.BOLD, 14));
 		
@@ -56,39 +42,21 @@ public class _7_ClosurePage extends JPanel implements Settable {
 		this.btn_yes = new JButton("Yes");
 		this.btn_no = new JButton("No");
 	}
-	
-	private void setupLayout() {
+
+	@Override
+	protected void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		this.add(lbl_title,   newLabelConstraint(0, 0, 20));
-		this.add(lbl_prompt1,  newLabelConstraint(0, 1, 0));
-		this.add(lbl_prompt2,  newLabelConstraint(0, 2, 0));
-		this.add(btn_yes, 	newButtonConstraint(0, 3));
-		this.add(btn_no,    newButtonConstraint(1, 3));
+		this.add(lbl_title,   BankingPanel.newCenterLabelConstraint(0, 0, 20));
+		this.add(lbl_prompt1, BankingPanel.newCenterLabelConstraint(0, 1, 0));
+		this.add(lbl_prompt2, BankingPanel.newCenterLabelConstraint(0, 2, 0));
+		this.add(btn_yes, 	       BankingPanel.newButtonConstraint(0, 3));
+		this.add(btn_no,           BankingPanel.newButtonConstraint(1, 3));
 	}
 
-	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, bottomInset, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newButtonConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c; 
-	}
-	
-	private void setupInteractions() {
+	@Override
+	protected void setupInteractions() {
 		this.btn_yes.addActionListener(e -> {
 			this.runner.setAccountId();
 			this.transactionManager.setAccountClosureTransaction();
@@ -104,15 +72,19 @@ public class _7_ClosurePage extends JPanel implements Settable {
 			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}
-	
+
 	/*
 	 * SERVICE METHODS
 	 */
+	@Override
+	public void clearFieldsMessages() {
+		// None
+	}
+
 	@Override
 	public void setDetails(Account account) {
 		this.lbl_prompt1.setText(String.format(
 				"Are you sure you want to close account #%s?",
 				this.accountManager.getCurrAccount().getAccountNumber()));
 	}
-
 }

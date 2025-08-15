@@ -1,33 +1,21 @@
 package gui.panels;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import banking_system.accounts.Account;
-import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
-import banking_system.transactions.TransactionManager;
-import gui.interfaces.Clearable;
-import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
+public class _6_ChangePinPage extends BankingPanel {
 	/*
 	 * ATTRIBUTES
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	// Controllers
-	private final MainRunner runner;
-	private final AccountManager accountManager;
-	private final TransactionManager transactionManager;
 		
 	// Components
 	private JLabel lbl_title;
@@ -45,16 +33,14 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 	 * Create the panel.
 	 */
 	public _6_ChangePinPage(MainRunner runner) {
-		this.runner = runner;
-		this.accountManager = runner.getAccountManager();
-		this.transactionManager = runner.getTransactionManager();
-		
-		this.setupComponents();
-		this.setupLayout();
-		this.setupInteractions();
+		super(runner);
 	}
 	
-	private void setupComponents() {
+	/*
+	 * SERVICE METHODS
+	 */
+	@Override
+	protected void setupComponents() {
 		this.lbl_title = new JLabel("CHANGE PIN");
 		lbl_title.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
@@ -67,78 +53,29 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 		this.btn_changePin = new JButton("Change PIN");
 		this.btn_back = new JButton("Back");
 	}
-	
-	private void setupLayout() {
+
+	@Override
+	protected void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
 		JPanel fieldWrapper = new JPanel();
 		fieldWrapper.setLayout(new GridBagLayout());
-		fieldWrapper.add(lbl_promptOldPin,   newFieldLabelConstraint(0, 0));
-		fieldWrapper.add(fld_oldPin,              newFieldConstraint(1, 0));
-		fieldWrapper.add(lbl_promptNewPin,  newFieldLabelConstraint(0, 1));
-		fieldWrapper.add(fld_newPin,             newFieldConstraint(1, 1));
+		fieldWrapper.add(lbl_promptOldPin,  BankingPanel.newFieldLabelConstraint(0, 0));
+		fieldWrapper.add(fld_oldPin,             BankingPanel.newFieldConstraint(1, 0));
+		fieldWrapper.add(lbl_promptNewPin,  BankingPanel.newFieldLabelConstraint(0, 1));
+		fieldWrapper.add(fld_newPin,             BankingPanel.newFieldConstraint(1, 1));
 		
-		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
-		this.add(lbl_accNum,  newLabelConstraint(0, 1, 20));
-		this.add(lbl_error,   newLabelConstraint(0, 2, 0));
-		this.add(fieldWrapper, newWrapperConstraints(0, 3));
-		this.add(btn_changePin, newButtonConstraint(0, 4));
-		this.add(btn_back,      newButtonConstraint(1, 4));
+		this.add(lbl_title,  BankingPanel.newCenterLabelConstraint(0, 0, 0));
+		this.add(lbl_accNum, BankingPanel.newCenterLabelConstraint(0, 1, 20));
+		this.add(lbl_error,  BankingPanel.newCenterLabelConstraint(0, 2, 0));
+		this.add(fieldWrapper,   BankingPanel.newWrapperConstraint(0, 3));
+		this.add(btn_changePin,   BankingPanel.newButtonConstraint(0, 4));
+		this.add(btn_back,        BankingPanel.newButtonConstraint(1, 4));
 	}
 
-	private static GridBagConstraints newWrapperConstraints(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, 0, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, bottomInset, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newFieldLabelConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.insets = new Insets(0, 0, 0, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newFieldConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c;
-	}
-	
-	
-	private static GridBagConstraints newButtonConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c; 
-	}
-	
-	private void setupInteractions() {
+	@Override
+	protected void setupInteractions() {
 		this.btn_changePin.addActionListener(e -> {
 			AccountOperationResult result = this.accountManager.getCurrAccount().modifyPin(
 					String.valueOf(this.fld_oldPin.getPassword()),
@@ -177,19 +114,17 @@ public class _6_ChangePinPage extends JPanel implements Settable, Clearable {
 			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}
-	
-	/*
-	 * SERVICE METHODS
-	 */
+
 	@Override
-	public void setDetails(Account account) {
-		this.lbl_accNum.setText("#" + account.getAccountNumber());
+	public void clearFieldsMessages() {
+		this.fld_newPin.setText("");
+		this.fld_oldPin.setText("");
+		this.lbl_error.setText(" ");
 	}
 	
 	@Override
-	public void clearFieldsAndMsgs() {
-		this.fld_oldPin.setText("");
-		this.fld_newPin.setText("");
+	public void setDetails(Account account) {
+		this.lbl_accNum.setText(String.format("#%s", account.getAccountNumber()));
 		this.lbl_error.setText(" ");
 	}
 }

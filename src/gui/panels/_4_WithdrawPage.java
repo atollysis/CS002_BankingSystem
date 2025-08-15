@@ -1,35 +1,22 @@
 package gui.panels;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import banking_system.accounts.Account;
-import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
-import banking_system.transactions.TransactionManager;
 import banking_system.transactions.TransactionType;
-import gui.interfaces.Clearable;
-import gui.interfaces.Settable;
 import runners.MainRunner;
 
-public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
+public class _4_WithdrawPage extends BankingPanel {
 	/*
 	 * ATTRIBUTES
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	// Controllers
-	private final MainRunner runner;
-	private final AccountManager accountManager;
-	private final TransactionManager transactionManager;
 		
 	// Components
 	private JLabel lbl_title;
@@ -45,16 +32,14 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 	 * Create the panel.
 	 */
 	public _4_WithdrawPage(MainRunner runner) {
-		this.runner = runner;
-		this.accountManager = runner.getAccountManager();
-		this.transactionManager = runner.getTransactionManager();
-		
-		this.setupComponents();
-		this.setupLayout();
-		this.setupInteractions();
+		super(runner);
 	}
 	
-	private void setupComponents() {
+	/*
+	 * SUPPORT METHODS
+	 */
+	@Override
+	protected void setupComponents() {
 		this.lbl_title = new JLabel("WITHDRAW");
 		lbl_title.setFont(new Font("Arial", Font.BOLD, 14));
 		this.lbl_accNum = new JLabel("#1234");
@@ -65,51 +50,23 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 		this.btn_withdraw = new JButton("Withdraw");
 		this.btn_back = new JButton("Back");
 	}
-	
-	private void setupLayout() {
+
+	@Override
+	protected void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
-		this.add(lbl_title,   newLabelConstraint(0, 0, 0));
-		this.add(lbl_accNum,  newLabelConstraint(0, 1, 0));
-		this.add(lbl_balance, newLabelConstraint(0, 2, 20));
-		this.add(lbl_error,   newLabelConstraint(0, 3, 0));
-		this.add(fld_balance, newFieldConstraint(0, 4));
-		this.add(btn_withdraw, newButtonConstraint(0, 5));
-		this.add(btn_back,    newButtonConstraint(1, 5));
+		this.add(lbl_title,   BankingPanel.newCenterLabelConstraint(0, 0, 0));
+		this.add(lbl_accNum,  BankingPanel.newCenterLabelConstraint(0, 1, 0));
+		this.add(lbl_balance, BankingPanel.newCenterLabelConstraint(0, 2, 20));
+		this.add(lbl_error,   BankingPanel.newCenterLabelConstraint(0, 3, 0));
+		this.add(fld_balance,       BankingPanel.newFieldConstraint(0, 4));
+		this.add(btn_withdraw,     BankingPanel.newButtonConstraint(0, 5));
+		this.add(btn_back,         BankingPanel.newButtonConstraint(1, 5));
 	}
 
-	private static GridBagConstraints newLabelConstraint(int x, int y, int bottomInset) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, bottomInset, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newFieldConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c;
-	}
-	
-	private static GridBagConstraints newButtonConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c; 
-	}
-	
-	private void setupInteractions() {
+	@Override
+	protected void setupInteractions() {
 		this.btn_withdraw.addActionListener(e -> {
 			double amount;
 			try {
@@ -157,14 +114,15 @@ public class _4_WithdrawPage extends JPanel implements Settable, Clearable {
 	 * SERVICE METHODS
 	 */
 	@Override
-	public void setDetails(Account account) {
-		this.lbl_accNum.setText("#" + account.getAccountNumber());
-		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
+	public void clearFieldsMessages() {
+		this.fld_balance.setText("");
+		this.lbl_error.setText(" ");
 	}
 	
 	@Override
-	public void clearFieldsAndMsgs() {
-		this.fld_balance.setText("");
+	public void setDetails(Account account) {
+		this.lbl_accNum.setText(String.format("#%s", account.getAccountNumber()));
+		this.lbl_balance.setText(String.format("Php %.2f", account.getBalance()));
 		this.lbl_error.setText(" ");
 	}
 }

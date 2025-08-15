@@ -1,10 +1,7 @@
 package gui.panels;
 
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -12,24 +9,17 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import banking_system.accounts.AccountManager;
+import banking_system.accounts.Account;
 import banking_system.accounts.ManagerOperationResult;
-import banking_system.transactions.TransactionManager;
-import gui.interfaces.Clearable;
 import runners.MainRunner;
 
-public class _1_LoginPage extends JPanel implements Clearable {
+public class _1_LoginPage extends BankingPanel {
 	/*
 	 * ATTRIBUTES
 	 */
 	private static final long serialVersionUID = 1L;
-
-	// Controllers
-	private final MainRunner runner;
-	private final AccountManager accountManager;
-	private final TransactionManager transactionManager;
 	
-	// Swing
+	// Components
 	private JLabel lbl_welcome;
 	
 	private JLabel lbl_accNum;
@@ -46,17 +36,13 @@ public class _1_LoginPage extends JPanel implements Clearable {
 	 * Create the panel.
 	 */
 	public _1_LoginPage(MainRunner runner) {
-		this.runner = runner;
-		this.accountManager = runner.getAccountManager();
-		this.transactionManager = runner.getTransactionManager();
-		
-		this.setupComponents();
-		this.setupLayout();
-		this.setupInteractions();
+		super(runner);
 	}
-	
-	private void setupComponents() {
+
+	@Override
+	protected void setupComponents() {
 		this.lbl_welcome = new JLabel("Welcome!");
+		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
 		
 		this.lbl_accNum = new JLabel("Account Number");
 		this.fld_accNum = new JTextField();
@@ -69,86 +55,27 @@ public class _1_LoginPage extends JPanel implements Clearable {
 		this.btn_create = new JButton("Create Account");
 	}
 
-	private void setupLayout() {
+	@Override
+	protected void setupLayout() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 		
 		JPanel fieldWrapper = new JPanel();
 		fieldWrapper.setLayout(new GridBagLayout());
-		fieldWrapper.add(lbl_accNum, newFieldLabelConstraint(0, 0));
-		fieldWrapper.add(fld_accNum,      newFieldConstraint(1, 0));
-		fieldWrapper.add(lbl_accPin, newFieldLabelConstraint(0, 1));
-		fieldWrapper.add(fld_accPin,      newFieldConstraint(1, 1));
+		fieldWrapper.add(lbl_accNum, BankingPanel.newFieldLabelConstraint(0, 0));
+		fieldWrapper.add(fld_accNum,      BankingPanel.newFieldConstraint(1, 0));
+		fieldWrapper.add(lbl_accPin, BankingPanel.newFieldLabelConstraint(0, 1));
+		fieldWrapper.add(fld_accPin,      BankingPanel.newFieldConstraint(1, 1));
 		
-		this.add(lbl_welcome, newCenteredLabelConstraint(0, 0));
-		lbl_welcome.setFont(new Font("Arial", Font.BOLD, 14));
-		this.add(this.lbl_error,  newErrLabelConstraint(0, 1));
-		this.add(fieldWrapper,     newWrapperConstraint(0, 2));
-		this.add(this.btn_login,  newButtonConstraint(0, 3));
-		this.add(this.btn_create, newButtonConstraint(1, 3));
+		this.add(lbl_welcome,     BankingPanel.newCenterLabelConstraint(0, 0, 0));
+		this.add(this.lbl_error,  BankingPanel.newCenterLabelConstraint(0, 1, 0));
+		this.add(fieldWrapper,        BankingPanel.newWrapperConstraint(0, 2));
+		this.add(this.btn_login,       BankingPanel.newButtonConstraint(0, 3));
+		this.add(this.btn_create,      BankingPanel.newButtonConstraint(1, 3));
 	}
-	
-	private static GridBagConstraints newCenteredLabelConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, 0, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newWrapperConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, 0, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newFieldLabelConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.anchor = GridBagConstraints.LINE_END;
-		c.insets = new Insets(0, 0, 0, 0);
-		return c;
-	}
-	
-	private static GridBagConstraints newFieldConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c;
-	}
-	
-	private static GridBagConstraints newErrLabelConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.gridwidth = 2;
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(5, 10, 5, 5);
-		return c;
-	}
-	
-	private static GridBagConstraints newButtonConstraint(int x, int y) {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = x;
-		c.gridy = y;
-		c.weightx = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5, 5, 5, 5);
-		return c; 
-	}
-	
-	private void setupInteractions() {
+
+	@Override
+	protected void setupInteractions() {
 		this.btn_login.addActionListener(e -> {
 			ManagerOperationResult result = this.accountManager.login(
 					this.fld_accNum.getText(),
@@ -224,14 +151,16 @@ public class _1_LoginPage extends JPanel implements Clearable {
 			}
 		});
 	}
-	
-	/*
-	 * SERVICE METHODS
-	 */
+
 	@Override
-	public void clearFieldsAndMsgs() {
+	public void clearFieldsMessages() {
 		this.fld_accNum.setText("");
 		this.fld_accPin.setText("");
 		this.lbl_error.setText(" ");
+	}
+
+	@Override
+	public void setDetails(Account account) {
+		// None
 	}
 }
