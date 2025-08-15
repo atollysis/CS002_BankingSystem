@@ -104,6 +104,7 @@ public class _3_DepositPage extends JPanel implements Settable, Clearable {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
+		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(5, 5, 5, 5);
 		return c; 

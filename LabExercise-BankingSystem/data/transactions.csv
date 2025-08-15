@@ -999,3 +999,5 @@ id,timestamp,transactionType,accountId,amount,recipientId,status
 998,2025-08-03T04:59:58,deposit,487,5467.00,null,success
 999,2025-08-03T07:00:06,transfer,585,2015.00,182,account_invalid
 1000,2025-08-04T09:00:09,withdraw,260,1472.00,null,balance_insufficient
+1001,2025-08-15T15:23:50.392996,withdraw,72,5757.79,null,success
+1002,2025-08-15T15:23:53.541904500,account_closure,72,0.00,null,success
