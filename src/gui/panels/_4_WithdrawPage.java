@@ -1,6 +1,7 @@
 package gui.panels;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -9,7 +10,6 @@ import javax.swing.JTextField;
 
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountOperationResult;
-import banking_system.transactions.TransactionType;
 import runners.MainRunner;
 
 public class _4_WithdrawPage extends BankingPanel {
@@ -60,7 +60,9 @@ public class _4_WithdrawPage extends BankingPanel {
 		this.add(lbl_accNum,  BankingPanel.newCenterLabelConstraint(0, 1, 0));
 		this.add(lbl_balance, BankingPanel.newCenterLabelConstraint(0, 2, 20));
 		this.add(lbl_error,   BankingPanel.newCenterLabelConstraint(0, 3, 0));
-		this.add(fld_balance,       BankingPanel.newFieldConstraint(0, 4));
+		GridBagConstraints fieldConstraint = BankingPanel.newFieldConstraint(0, 4);
+		fieldConstraint.gridwidth = 2;
+		this.add(fld_balance,      fieldConstraint);
 		this.add(btn_withdraw,     BankingPanel.newButtonConstraint(0, 5));
 		this.add(btn_back,         BankingPanel.newButtonConstraint(1, 5));
 	}
@@ -75,10 +77,7 @@ public class _4_WithdrawPage extends BankingPanel {
 				amount = 0.0;
 			}
 			AccountOperationResult result = this.accountManager.getCurrAccount().withdraw(amount);
-			this.transactionManager.setTransactionType(TransactionType.WITHDRAW);
-			this.runner.setAccountId();
-			this.transactionManager.setAmount(amount);
-			this.transactionManager.setRecipientID(null);
+			this.transactionManager.setWithdrawTransaction(this.accountManager.getCurrAccount());
 			this.transactionManager.setStatus(result);
 			
 			switch (result) {
@@ -105,7 +104,6 @@ public class _4_WithdrawPage extends BankingPanel {
 		});
 		
 		this.btn_back.addActionListener(e -> {
-			this.transactionManager.setTransactionType(null);
 			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}

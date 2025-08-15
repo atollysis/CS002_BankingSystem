@@ -80,9 +80,8 @@ public class _6_ChangePinPage extends BankingPanel {
 			AccountOperationResult result = this.accountManager.getCurrAccount().modifyPin(
 					String.valueOf(this.fld_oldPin.getPassword()),
 					String.valueOf(this.fld_newPin.getPassword()));
-			this.transactionManager.setPinChangeTransaction();
+			this.transactionManager.setPinChangeTransaction(this.accountManager.getCurrAccount());
 			this.transactionManager.setStatus(result);
-			this.runner.setAccountId();
 			
 			switch (result) {
 				case SUCCESS:
@@ -110,7 +109,6 @@ public class _6_ChangePinPage extends BankingPanel {
 		});
 		
 		this.btn_back.addActionListener(e -> {
-			this.transactionManager.setTransactionType(null);
 			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}

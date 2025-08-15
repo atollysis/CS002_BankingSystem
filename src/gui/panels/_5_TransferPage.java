@@ -11,7 +11,6 @@ import javax.swing.JTextField;
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.accounts.AccountOperationResult;
-import banking_system.transactions.TransactionType;
 import runners.MainRunner;
 
 public class _5_TransferPage extends BankingPanel {
@@ -92,14 +91,9 @@ public class _5_TransferPage extends BankingPanel {
 			}
 			Account recipientAccount = AccountManager.findAccount(this.fld_recipient.getText());
 			AccountOperationResult result = this.accountManager.getCurrAccount().transfer(recipientAccount, amount);
-			this.transactionManager.setTransactionType(TransactionType.TRANSFER);
-			this.runner.setAccountId();
+			this.transactionManager.setTransferTransaction(this.accountManager.getCurrAccount(), recipientAccount);
 			this.transactionManager.setAmount(amount);
 			this.transactionManager.setStatus(result);
-			if (recipientAccount != null)
-				this.transactionManager.setRecipientID(Integer.toString(recipientAccount.getID()));
-			else
-				this.transactionManager.setRecipientID(null);
 			
 			/*
 			 * I could bring down the transaction manager call here...
@@ -135,7 +129,6 @@ public class _5_TransferPage extends BankingPanel {
 		});
 		
 		this.btn_back.addActionListener(e -> {
-			this.transactionManager.setTransactionType(null);
 			this.runner.goToPanel(PanelType.ACCOUNT);
 		});
 	}

@@ -58,8 +58,7 @@ public class _7_ClosurePage extends BankingPanel {
 	@Override
 	protected void setupInteractions() {
 		this.btn_yes.addActionListener(e -> {
-			this.runner.setAccountId();
-			this.transactionManager.setAccountClosureTransaction();
+			this.transactionManager.setAccountClosureTransaction(this.accountManager.getCurrAccount());
 			this.transactionManager.addNewTransaction();
 			
 			this.accountManager.closeAccount();

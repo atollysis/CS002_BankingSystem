@@ -95,8 +95,6 @@ public class MainRunner extends JFrame {
 	 */
 	public void goToPanel(PanelType panel) {
 		this.resetFields();
-		if (panel == PanelType.ACCOUNT)
-			this.setAccountId();
 		card.show(contentPane, panel.toString());
 	}
 	
@@ -109,11 +107,6 @@ public class MainRunner extends JFrame {
 	public void resetFields() {
 		for (BankingPanel panel : this.panels.values())
 			panel.clearFieldsMessages();
-	}
-	
-	public void setAccountId() {
-		int id = this.accountManager.getCurrAccount().getID();
-		this.transactionManager.setAccountID(Integer.toString(id));
 	}
 	
 	/*

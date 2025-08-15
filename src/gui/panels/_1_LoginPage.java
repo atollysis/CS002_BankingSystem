@@ -122,9 +122,8 @@ public class _1_LoginPage extends BankingPanel {
 			switch (result) {
 				case SUCCESS:
 					// Create account creation transaction and inform the user
-					String id = this.accountManager.getCurrAccount().getAccountNumber();
-					this.transactionManager.setAccountID(id);
-					this.transactionManager.setAccountCreationTransaction();
+					this.transactionManager.setAccountID(this.accountManager.getCurrAccount().getAccountNumber());
+					this.transactionManager.setAccountCreationTransaction(this.accountManager.getCurrAccount());
 					this.transactionManager.addNewTransaction();
 					this.accountManager.setCurrAccount(null);
 					this.lbl_error.setText("Account succesfully created!");

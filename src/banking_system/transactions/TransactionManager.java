@@ -3,6 +3,7 @@ package banking_system.transactions;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import banking_system.accounts.Account;
 import banking_system.accounts.AccountOperationResult;
 import banking_system.parsers.CSVParser;
 
@@ -24,14 +25,19 @@ public class TransactionManager {
 	/*
 	 * SUPPORT METHODS
 	 */
-	public void lazyLoadTransactions() {
-		if (transactions == null)
-			transactions = CSVParser.loadTransactions();
+	private static void nullCheck(Account account) {
+		if (account == null)
+			throw new NullPointerException("Account is null.");
 	}
 	
 	/*
 	 * SERVICE METHODS
 	 */
+	public void lazyLoadTransactions() {
+		if (transactions == null)
+			transactions = CSVParser.loadTransactions();
+	}
+	
 	public void addNewTransaction() {
 		this.addNewTransaction(this.details);
 	}
@@ -62,10 +68,6 @@ public class TransactionManager {
 		this.details = new SessionDetails();
 	}
 	
-	public void setTransactionType(TransactionType type) {
-		this.details.setTransactionType(type);
-	}
-	
 	public void setAccountID(String id) {
 		this.details.setAccountID(id);
 	}
@@ -74,33 +76,57 @@ public class TransactionManager {
 		this.details.setAmount(amount);
 	}
 	
-	public void setRecipientID(String id) {
-		this.details.setRecipientID(id);
-	}
-	
 	public void setStatus(AccountOperationResult status) {
 		this.details.setStatus(status);
 	}
 	
-	public void setPinChangeTransaction() {
-		details.setTransactionType(TransactionType.CHANGE_PIN);
-//		details.setAccountID(); // set beforehand
+	public void setDepositTransaction(Account account) {
+		TransactionManager.nullCheck(account);
+		details.setTransactionType(TransactionType.DEPOSIT);
+		details.setAccountID(Integer.toString(account.getID()));
 		details.setAmount(0.0);
 		details.setRecipientID(null);
 	}
 	
-	public void setAccountCreationTransaction() {
+	public void setWithdrawTransaction(Account account) {
+		TransactionManager.nullCheck(account);
+		details.setTransactionType(TransactionType.WITHDRAW);
+		details.setAccountID(Integer.toString(account.getID()));
+		details.setAmount(0.0);
+		details.setRecipientID(null);
+	}
+	
+	public void setTransferTransaction(Account account, Account recipientAccount) {
+		TransactionManager.nullCheck(account);
+		TransactionManager.nullCheck(recipientAccount);
+		details.setTransactionType(TransactionType.TRANSFER);
+		details.setAccountID(Integer.toString(account.getID()));
+		details.setAmount(0.0);
+		details.setRecipientID(Integer.toString(recipientAccount.getID()));
+	}
+	
+	public void setPinChangeTransaction(Account account) {
+		TransactionManager.nullCheck(account);
+		details.setTransactionType(TransactionType.CHANGE_PIN);
+		details.setAccountID(Integer.toString(account.getID()));
+		details.setAmount(0.0);
+		details.setRecipientID(null);
+	}
+	
+	public void setAccountCreationTransaction(Account account) {
+		TransactionManager.nullCheck(account);
 		details.setTransactionType(TransactionType.ACCOUNT_CREATION);
-//		details.setAccountID(); // set beforehand
+		details.setAccountID(Integer.toString(account.getID()));
 		details.setAmount(0.0);
 		details.setRecipientID(null);
 		// Specify success since it's created on the login page
 		details.setStatus(AccountOperationResult.SUCCESS);
 	}
 	
-	public void setAccountClosureTransaction() {
+	public void setAccountClosureTransaction(Account account) {
+		TransactionManager.nullCheck(account);
 		details.setTransactionType(TransactionType.ACCOUNT_CLOSURE);
-//		details.setAccountID(); // set beforehand
+		details.setAccountID(Integer.toString(account.getID()));
 		details.setAmount(0.0);
 		details.setRecipientID(null);
 		details.setStatus(AccountOperationResult.SUCCESS);
