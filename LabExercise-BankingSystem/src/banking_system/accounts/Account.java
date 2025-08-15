@@ -58,6 +58,8 @@ public class Account {
 		// Guard clauses
 		if (targetAccount == null)
 			return AccountOperationResult.ACCOUNT_INVALID;
+		if (targetAccount.isClosed)
+			return AccountOperationResult.ACCOUNT_INVALID;
 		if (amount <= 0)
 			return AccountOperationResult.BALANCE_INVALID;
 		if (amount > this.balance)
@@ -81,7 +83,7 @@ public class Account {
 	}
 	
 	public AccountOperationResult closeAccount() {
-		if (this.hasEmptyBalance())
+		if (!this.hasEmptyBalance())
 			return AccountOperationResult.BALANCE_EXISTS;
 		
 		this.isClosed = true;
@@ -108,20 +110,13 @@ public class Account {
 	}
 	
 	public String getCSVString() {
-		return String.format("%s,%s,%s,%s,%.2f\n",
+		return String.format("%s,%b,%s,%s,%.2f\n",
 				this.id,
 				this.isClosed,
 				this.accountNumber,
 				this.pin,
 				this.balance
 				);
-	}
-
-	/*
-	 * SETTERS
-	 */
-	public void setClosed(boolean isClosed) {
-		this.isClosed = isClosed;
 	}
 
 	/*
@@ -136,11 +131,12 @@ public class Account {
 
 		Account other = (Account) obj;
 
-		return this.accountNumber.equals(other.accountNumber);
+		return this.id == other.id
+			&& this.accountNumber.equals(other.accountNumber);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.accountNumber);
+		return Objects.hash(this.id, this.accountNumber);
 	}
 }

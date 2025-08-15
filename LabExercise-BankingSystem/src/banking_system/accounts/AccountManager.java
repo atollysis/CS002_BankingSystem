@@ -90,8 +90,14 @@ public class AccountManager {
 	}
 	
 	public ManagerOperationResult closeAccount() {
-		this.currentAccount.closeAccount();
-		return CSVParser.updateAccounts(AccountManager.accounts);
+		AccountOperationResult result = this.currentAccount.closeAccount();
+		
+		if (result == AccountOperationResult.BALANCE_EXISTS)
+			return ManagerOperationResult.INVALID_ACCOUNT_CLOSURE;
+		else if (result == AccountOperationResult.SUCCESS)
+			return CSVParser.updateAccounts(AccountManager.accounts);
+		else
+			throw new IllegalStateException("Unexpected operation result returned.");
 	}
 	
 	public ManagerOperationResult login(String accountNumber, String pin) {

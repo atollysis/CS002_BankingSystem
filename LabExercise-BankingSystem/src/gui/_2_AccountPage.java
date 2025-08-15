@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.transactions.TransactionManager;
-import banking_system.transactions.TransactionType;
 import gui.interfaces.Settable;
 import runners.MainRunner;
 
@@ -129,12 +128,28 @@ public class _2_AccountPage extends JPanel implements Settable {
 		});
 		
 		this.btn_delete.addActionListener(e -> {
-			if (!this.accountManager.getCurrAccount().hasEmptyBalance()) {
-				this.lbl_error.setText("You still have balance!");
-				return;
+			switch (this.accountManager.closeAccount()) {
+				case SUCCESS:
+					this.runner.goToPanel(PanelType.CLOSURE);
+					break;
+					
+				case INVALID_ACCOUNT_CLOSURE:
+					this.lbl_error.setText("You still have balance!");
+					break;
+					
+				case IO_PROBLEM:
+					throw new IllegalStateException("Error in reading/writing to database.");
+	
+				default:
+					// INVALID_ACCOUNT_CLOSED
+					// INVALID_ACCOUNT_EXISTS
+					// INVALID_ACCOUNT_FORMAT
+					// INVALID_ACCOUNT_NONEXISTENT
+					// INVALID_ACCOUNT_NOT_CLOSED
+					// INVALID_PIN_FORMAT
+					// INVALID_PIN_WRONG
+					throw new IllegalStateException("Unexpected operation result returned.");
 			}
-			
-			this.runner.goToPanel(PanelType.CLOSURE);
 		});
 	}
 	
