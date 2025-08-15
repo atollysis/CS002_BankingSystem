@@ -13,16 +13,16 @@ import javax.swing.border.EmptyBorder;
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.transactions.TransactionManager;
-import gui.PanelType;
-import gui._1_LoginPage;
-import gui._2_AccountPage;
-import gui._3_DepositPage;
-import gui._4_WithdrawPage;
-import gui._5_TransferPage;
-import gui._6_ChangePinPage;
-import gui._7_ClosurePage;
 import gui.interfaces.Clearable;
 import gui.interfaces.Settable;
+import gui.panels.PanelType;
+import gui.panels._1_LoginPage;
+import gui.panels._2_AccountPage;
+import gui.panels._3_DepositPage;
+import gui.panels._4_WithdrawPage;
+import gui.panels._5_TransferPage;
+import gui.panels._6_ChangePinPage;
+import gui.panels._7_ClosurePage;
 
 public class MainRunner extends JFrame {
 

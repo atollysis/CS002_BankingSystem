@@ -1,4 +1,4 @@
-package gui;
+package gui.panels;
 
 public enum PanelType {
 	LOGIN,

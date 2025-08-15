@@ -1,4 +1,4 @@
-package miscellaneous;
+package banking_system.miscellaneous;
 
 import java.io.FileWriter;
 import java.io.IOException;
