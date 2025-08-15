@@ -999,4 +999,3 @@ id,timestamp,transactionType,accountId,amount,recipientId,status
 998,2025-08-03T04:59:58,deposit,487,5467.00,null,success
 999,2025-08-03T07:00:06,transfer,585,2015.00,182,account_invalid
 1000,2025-08-04T09:00:09,withdraw,260,1472.00,null,balance_insufficient
-1001,2025-08-12T13:29:41.777689100,change_pin,987,0.00,null,pin_wrong
