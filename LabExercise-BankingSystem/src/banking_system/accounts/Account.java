@@ -6,11 +6,12 @@ public class Account {
 	/*
 	 * ATTRIBUTES
 	 */
-	private int id;
-	private boolean isClosed;
-	private String accountNumber;
+	private final int id;
+	private final String accountNumber;
+	
 	private String pin;
 	private double balance;
+	private boolean isClosed;
 
 	/*
 	 * CONSTRUCTOR
