@@ -9,8 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-
 import banking_system.accounts.Account;
 import banking_system.accounts.AccountManager;
 import banking_system.transactions.TransactionManager;

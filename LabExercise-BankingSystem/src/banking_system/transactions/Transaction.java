@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import banking_system.accounts.AccountOperationResult;
-import banking_system.accounts.SessionDetails;
 
 public class Transaction {
 	/*

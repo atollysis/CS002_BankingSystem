@@ -4,7 +4,6 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.JFrame;

@@ -1,6 +1,6 @@
-package banking_system.accounts;
+package banking_system.transactions;
 
-import banking_system.transactions.TransactionType;
+import banking_system.accounts.AccountOperationResult;
 
 public class SessionDetails {
 	/*
