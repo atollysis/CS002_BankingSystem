@@ -77,7 +77,7 @@ public class AccountManager {
 			return ManagerOperationResult.INVALID_PIN_FORMAT;
 		
 		Account newAccount = new Account(
-				AccountManager.accounts.size(),
+				AccountManager.accounts.size() + 1,
 				false,
 				accountNumber,
 				pin,
